@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="assets\" />
+    <Compile Remove="assets\**" />
+    <EmbeddedResource Remove="assets\**" />
+    <None Remove="assets\**" />
   </ItemGroup>
 
 </Project>
