@@ -30,6 +30,7 @@
         {
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             switchViewSideToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
@@ -37,7 +38,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.BackColor = SystemColors.InactiveCaption;
+            menuStrip.BackColor = SystemColors.ActiveCaption;
             menuStrip.ImageScalingSize = new Size(20, 20);
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, viewToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
@@ -49,9 +50,17 @@
             // 
             // fileToolStripMenuItem
             // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(224, 26);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -79,6 +88,7 @@
             Name = "MainForm";
             Text = "Chess";
             Paint += MainForm_Paint;
+            MouseClick += MainForm_MouseClick;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);
@@ -91,5 +101,6 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem switchViewSideToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
     }
 }
