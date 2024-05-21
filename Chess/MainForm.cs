@@ -9,8 +9,8 @@ namespace Chess
         private readonly Brush sandyBrownBrush;
         private readonly Point boardTopLeft;
         private readonly int boardLenghtInPixels;
-        private readonly float boardSquareLenght;
-
+        private readonly float boardSquareLenghtInPixels;
+        private readonly Image[] pieceImages;
         public MainForm()
         {
             InitializeComponent();
@@ -25,43 +25,75 @@ namespace Chess
 
             float rectHeight = (float)(ClientRectangle.Height - menuStrip.Height) / 8.0f;
             float rectWidth = (float)ClientRectangle.Width / 8.0f;
-            boardSquareLenght = Math.Min(rectWidth, rectHeight);
+            boardSquareLenghtInPixels = Math.Min(rectWidth, rectHeight);
 
             boardLenghtInPixels = ClientRectangle.Width - ((ClientRectangle.Height + menuStrip.Height) / 2);
+
+            pieceImages = new Image[Game.PieceImagesPaths.Length];
+
+            for (int i = 0; i < pieceImages.Length; i++)
+            {
+                if (File.Exists(Game.PieceImagesPaths[i]))
+                    pieceImages[i] = Image.FromFile(Game.PieceImagesPaths[i]);
+                else
+                    throw new FileNotFoundException($"Image file not found: {Game.PieceImagesPaths[i]}");
+            }
         }
 
         private void DrawBoard()
         {
             graphics.Clear(Color.DarkSlateGray);
 
+            List<BoardIndex> squaresToHighlight = [];
+
+            if (Game.SelectedPiece.IsSelected())
+            {
+                squaresToHighlight = Game.GetAvailableSquares(Game.SelectedPiece);
+                squaresToHighlight.Add(Game.SelectedPiece);
+
+                if (Game.View == View.WhitePOV)
+                {
+                    for (int i = 0; i < squaresToHighlight.Count; i++)
+                    {
+                        BoardIndex temp = squaresToHighlight[i];
+                        temp.SwapForPOV();
+                        squaresToHighlight[i] = temp;
+                    }
+                }
+            }
+
+            BoardIndex bi = new(0, 0);
+            bi.SwapForPOV();
+
             for (int i = 0; i < Game.BoardLenght; i++)
             {
                 for (int j = 0; j < Game.BoardLenght; j++)
                 {
-                    float x = j * boardSquareLenght + boardTopLeft.X;
-                    float y = i * boardSquareLenght + boardTopLeft.Y;
+                    float x = j * boardSquareLenghtInPixels + boardTopLeft.X;
+                    float y = i * boardSquareLenghtInPixels + boardTopLeft.Y;
 
                     if ((Game.View == View.BlackPOV && (i + j) % 2 == 0) || (Game.View == View.WhitePOV && (i + j) % 2 != 0))
-                        graphics.FillRectangle(sandyBrownBrush, x, y, boardSquareLenght, boardSquareLenght);
+                        graphics.FillRectangle(sandyBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
                     else
-                        graphics.FillRectangle(saddleBrownBrush, x, y, boardSquareLenght, boardSquareLenght);
+                        graphics.FillRectangle(saddleBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
 
-                    if (Game.SelectedIndexAdjustedWithPOV().Row == i && Game.SelectedIndexAdjustedWithPOV().Col == j)
+                    if (squaresToHighlight.Contains(new(i, j)))
                     {
-                        Color color = Color.FromArgb(Color.Red.R, Color.Red.G, Color.Red.B, 100);
+                        //Color.Bisque;
+                        Color color = Color.FromArgb(75, Color.Bisque.R, Color.Bisque.G, Color.Bisque.B);
                         Brush selectedBrush = new SolidBrush(color);
-                        graphics.FillRectangle(selectedBrush, x, y, boardSquareLenght, boardSquareLenght);
+                        graphics.FillRectangle(selectedBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
                     }
 
-                    Piece currentPiece = Game.PieceAtBoardPos(i, j);
+                    Piece currentPiece = Game.GetPieceAtBoardPosPOVAdjusted(i, j);
 
                     if (currentPiece == Piece.None)
                         continue;
 
                     graphics.DrawImage(
-                        Image.FromFile(Game.PieceImagesPaths[(int)currentPiece]),
+                        pieceImages[(int)currentPiece],
                         (int)x, (int)y,
-                        (int)boardSquareLenght, (int)boardSquareLenght
+                        (int)boardSquareLenghtInPixels, (int)boardSquareLenghtInPixels
                     );
                 }
             }
@@ -97,8 +129,8 @@ namespace Chess
             if (clientRelativePos.X < 0 || clientRelativePos.Y < 0 || clientRelativePos.X >= boardLenghtInPixels || clientRelativePos.Y >= boardLenghtInPixels)
                 return;
 
-            int row = clientRelativePos.Y / (int)boardSquareLenght;
-            int col = clientRelativePos.X / (int)boardSquareLenght;
+            int row = clientRelativePos.Y / (int)boardSquareLenghtInPixels;
+            int col = clientRelativePos.X / (int)boardSquareLenghtInPixels;
 
             if (Game.SelectPiece(row, col))
                 Invalidate();
