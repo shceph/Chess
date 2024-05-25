@@ -33,6 +33,7 @@
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             switchViewSideToolStripMenuItem = new ToolStripMenuItem();
+            resetTheBoardToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,7 +51,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetTheBoardToolStripMenuItem, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
@@ -75,6 +76,13 @@
             switchViewSideToolStripMenuItem.Size = new Size(200, 26);
             switchViewSideToolStripMenuItem.Text = "Switch view side";
             switchViewSideToolStripMenuItem.Click += SwitchViewSideToolStripMenuItem_Click;
+            // 
+            // resetTheBoardToolStripMenuItem
+            // 
+            resetTheBoardToolStripMenuItem.Name = "resetTheBoardToolStripMenuItem";
+            resetTheBoardToolStripMenuItem.Size = new Size(224, 26);
+            resetTheBoardToolStripMenuItem.Text = "Reset the board";
+            resetTheBoardToolStripMenuItem.Click += ResetTheBoardToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -102,5 +110,6 @@
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem switchViewSideToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem resetTheBoardToolStripMenuItem;
     }
 }

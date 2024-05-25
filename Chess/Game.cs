@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
-    enum PieceColor
+    public enum PieceColor
     {
         White,
         Black
     }
 
-    enum Piece
+    public enum Piece
     {
         WhitePawn,
         BlackPawn,
@@ -132,11 +132,20 @@ namespace Chess
             row = Game.BoardLenght - 1 - row;
             col = Game.BoardLenght - 1 - col;
         }
+
+        public readonly Piece GetPiece()
+        {
+            if (!selected)
+                return Piece.None;
+
+            return Game.Board[row, col];
+        }
     }
 
     internal static class Game
     {
         public const int BoardLenght = 8;
+        public const bool RespectMoveRights = true;
 
         public static readonly string[] PieceImagesPaths =
         [
@@ -154,7 +163,7 @@ namespace Chess
             "assets/pieces/bk.png",
         ];
 
-        private static Piece[,] board = new Piece[BoardLenght, BoardLenght]
+        private static readonly Piece[,] initialBoard = new Piece[BoardLenght, BoardLenght]
         {
             { Piece.WhiteRook, Piece.WhiteKnight, Piece.WhiteBishop, Piece.WhiteQueen,
               Piece.WhiteKing, Piece.WhiteBishop, Piece.WhiteKnight, Piece.WhiteRook },
@@ -174,8 +183,8 @@ namespace Chess
               Piece.BlackKing, Piece.BlackBishop, Piece.BlackKnight, Piece.BlackRook }
         };
 
+        private static readonly Piece[,] board;
         public static Piece[,] Board { get { return board; } }
-
 
         private static View view = View.WhitePOV;
         public static View View { get { return view; } set { view = value; } }
@@ -183,12 +192,35 @@ namespace Chess
         private static BoardIndex selectedPiece = new();
         public static BoardIndex SelectedPiece { get { return selectedPiece; } }
 
-        public static BoardIndex SelectedIndexAdjustedWithPOV()
-        {
-            if (!selectedPiece.IsSelected() || view == View.BlackPOV)
-                return selectedPiece;
+        //private static PieceColor whoseTurn = PieceColor.White;
+        public static PieceColor WhoseTurn { get; set; }
 
-            return new(BoardLenght - 1 - selectedPiece.Row, BoardLenght - 1 - selectedPiece.Col);
+        static Game()
+        {
+            board = new Piece[BoardLenght, BoardLenght];
+            Reset();
+        }
+
+        public static void SwapTurn()
+        {
+            if (WhoseTurn == PieceColor.White)
+                WhoseTurn = PieceColor.Black;
+            else
+                WhoseTurn = PieceColor.White;
+        }
+
+        public static void Reset()
+        {
+            for (int i = 0; i < BoardLenght; i++)
+            {
+                for (int j = 0; j < BoardLenght; j++)
+                {
+                    board[i, j] = initialBoard[i, j];
+                }
+            }
+
+            selectedPiece.Unselect();
+            WhoseTurn = PieceColor.White;
         }
 
         public static Piece GetPieceAtBoardPosPOVAdjusted(int row, int col)
@@ -206,35 +238,16 @@ namespace Chess
         }
 
         /// <summary>
-        /// Not adjusted to the POV
+        /// This function is run when the player clicks a square with the left button
         /// </summary>
-        /// <param name="row"></param>
-        /// <param name="col"></param>
-        /// <returns></returns>
+        /// <param name="row">The row of the clicked square</param>
+        /// <param name="col">The column of the clicked square</param>
+        /// <returns>
+        /// True if something happend with the board, false otherwise.
+        /// This value is used to check if the board needs redrawing.
+        /// </returns>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static Piece GetPieceAtBoardPos(int row, int col)
-        {
-            if (row < 0 || row >= BoardLenght)
-                throw new ArgumentOutOfRangeException(nameof(row));
-
-            if (col < 0 || col >= BoardLenght)
-                throw new ArgumentOutOfRangeException(nameof(col));
-
-            return board[row, col];
-        }
-
-        private static Piece GetPieceAtBoardPos(BoardIndex boardIndex)
-        {
-            if (!boardIndex.IsSelected())
-                return Piece.None;
-
-            if (boardIndex.Row < 0 || boardIndex.Row >= BoardLenght || boardIndex.Col < 0 || boardIndex.Col >= BoardLenght)
-                throw new ArgumentOutOfRangeException(nameof(boardIndex), $"boardIndex: {{ {boardIndex.Row}, {boardIndex.Col} }}");
-
-            return board[boardIndex.Row, boardIndex.Col];
-        }
-
-        public static bool SelectPiece(int row, int col)
+        public static bool SelectPieceOrMoveSelected(int row, int col)
         {
             if (row < 0 || row >= BoardLenght)
                 throw new ArgumentOutOfRangeException(nameof(row));
@@ -251,24 +264,60 @@ namespace Chess
             // If a piece is selected, an attemp to move that piece was made, so we're checking if that's possible
             if (selectedPiece.IsSelected())
             {
-                List<BoardIndex> availableSquares = GetAvailableSquares(selectedPiece);
+                List<BoardIndex> availableMoves = GetAvailableMoves(selectedPiece, board);
 
-                if (availableSquares.Contains(new(row, col)))
+                if (availableMoves.Contains(new(row, col)))
                 {
-                    int currRow = selectedPiece.Row;
-                    int currCol = selectedPiece.Col;
+                    int selectedRow = selectedPiece.Row;
+                    int selectedCol = selectedPiece.Col;
+
+                    Piece chosenSquareOldVal = board[row, col];
+                    Piece selectedPieceSquareOldVal = board[selectedRow, selectedCol];
 
                     if (board[row, col] == Piece.None)
-                        (board[row, col], board[currRow, currCol]) = (board[currRow, currCol], board[row, col]);
+                        (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], board[row, col]);
                     else
-                        (board[row, col], board[currRow, currCol]) = (board[currRow, currCol], Piece.None);
+                        (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], Piece.None);
 
+                    if (IsInCheck(board[row, col].GetColor(), board))
+                    {
+                        MessageBox.Show("If you move there, your king will be in check", "Can't go there");
+                        board[row, col] = chosenSquareOldVal;
+                        board[selectedRow, selectedCol] = selectedPieceSquareOldVal;
+                        selectedPiece.Unselect();
+                        return true;
+                    }
+
+                    if ((board[row, col] == Piece.WhitePawn && row == RowNumToArrayIndex(8)) ||
+                        (board[row, col] == Piece.BlackPawn && row == RowNumToArrayIndex(1)))
+                    {
+                        using PromotePawnForm ppf = new(board[row, col].GetColor());
+                        ppf.ShowDialog();
+                        board[row, col] = ppf.ChosenPiece;
+                    }
+
+                    PieceColor oppositeColor = (board[row, col].IsWhite() ? PieceColor.Black : PieceColor.White);
+
+                    if (CheckIfThereAreNoAvailableMoves(oppositeColor))
+                    {
+                        if (IsInCheck(oppositeColor, board))
+                        {
+                            MainForm.IsCheckmate = true;
+                            MainForm.WhoWon = board[row, col].GetColor();
+                        }
+                        else
+                        {
+                            MainForm.IsStalemate = true;
+                        }
+                    }
+
+                    SwapTurn();
                     selectedPiece.Unselect();
                     return true;
                 }
-                else
+                else  // if (availableMoves.Contains(new(row, col)))
                 {
-                    if (board[row, col] == Piece.None)
+                    if (board[row, col] == Piece.None || (RespectMoveRights && board[row, col].GetColor() != WhoseTurn))
                         selectedPiece.Unselect();
                     else
                         selectedPiece.Select(row, col);
@@ -276,9 +325,9 @@ namespace Chess
                     return true;
                 }
             }
-            else
+            else  // if (selectedPiece.IsSelected())
             {
-                if (board[row, col] == Piece.None)
+                if (board[row, col] == Piece.None || (RespectMoveRights && board[row, col].GetColor() != WhoseTurn))
                     return false;
 
                 selectedPiece.Select(row, col);
@@ -288,7 +337,7 @@ namespace Chess
 
         /// <returns>
         /// 'true' if the unselecting had any effect (if a piece was selected when unselecting), 'false' otherwise.
-        /// This is used to check if there is a need to redraw the board when the user attempts to unselect the piece.
+        /// This value is used to check if there is a need to redraw the board when the user attempts to unselect the piece.
         /// </returns>
         public static bool UnselectPiece()
         {
@@ -315,60 +364,155 @@ namespace Chess
             return row - 1;
         }
 
-        public static List<BoardIndex> GetAvailableSquares(BoardIndex piece)
+        public static bool IsInCheck(PieceColor kingsColor, Piece[,] boardToUse)
         {
-            List<BoardIndex> availableSquares = [];
+            Piece kingToSearchFor = (kingsColor == PieceColor.White ? Piece.WhiteKing : Piece.BlackKing);
+            PieceColor oppositeColor = (kingsColor == PieceColor.White ? PieceColor.Black : PieceColor.White);
+            BoardIndex kingIndex = new();
 
+            bool goOn = true;
+            for (int i = 0; i < BoardLenght && goOn; i++)
+            {
+                for (int j = 0; j < BoardLenght; j++)
+                {
+                    if (boardToUse[i, j] == kingToSearchFor)
+                    {
+                        kingIndex.Select(i, j);
+                        goOn = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!kingIndex.IsSelected())
+                throw new Exception($"{(kingToSearchFor == Piece.WhiteKing ? "White" : "Black")} king not found");
+
+            for (int i = 0; i < BoardLenght; i++)
+            {
+                for (int j = 0; j < BoardLenght; j++)
+                {
+                    // Checks if the pieces of the opposite color can attack the king
+                    if (boardToUse[i, j].GetColor() == oppositeColor)
+                    {
+                        List<BoardIndex> blackPieceAvailableSquares = GetAvailableMoves(new(i, j), boardToUse);
+
+                        if (blackPieceAvailableSquares.Contains(kingIndex))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if you can move without leaving your king in check.
+        /// In other words, check if it's remi or checkmate
+        /// </summary>
+        /// <param name="side">Tells for which side to do the checking</param>
+        /// <returns></returns>
+        private static bool CheckIfThereAreNoAvailableMoves(PieceColor side)
+        {
+            Piece[,] tempBoard = new Piece[BoardLenght, BoardLenght];
+
+            for (int i = 0; i < BoardLenght; i++)
+            {
+                for (int j = 0; j < BoardLenght; j++)
+                {
+                    tempBoard[i, j] = board[i, j];
+                }
+            }
+
+            // This loop below checks for every possible move of every piece of the checked side, and if all those moves
+            // result in check, it means there are no possible and true is returned. If a possible move is found, false is returned in foreach
+            for (int i = 0; i < BoardLenght; i++)
+            {
+                for (int j = 0; j < BoardLenght; j++)
+                {
+                    if (board[i, j].GetColor() == side)
+                    {
+                        List<BoardIndex> availableMoves = GetAvailableMoves(new(i, j), board);
+
+                        foreach (var move in availableMoves)
+                        {
+                            Piece ijOldVal = tempBoard[i, j];
+                            Piece moveRowMoveColOldVal = tempBoard[move.Row, move.Col];
+
+                            if (moveRowMoveColOldVal == Piece.None)
+                                (tempBoard[i, j], tempBoard[move.Row, move.Col]) = (tempBoard[move.Row, move.Col], tempBoard[i, j]);
+                            else
+                                (tempBoard[i, j], tempBoard[move.Row, move.Col]) = (Piece.None, tempBoard[i, j]);
+
+                            if (!IsInCheck(side, tempBoard))
+                                return false;
+
+                            tempBoard[i, j] = ijOldVal;
+                            tempBoard[move.Row, move.Col] = moveRowMoveColOldVal;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public static List<BoardIndex> GetAvailableMoves(BoardIndex piece, Piece[,] boardToUse)
+        {
+            List<BoardIndex> availableMoves = [];
+
+            // The return value is used in loops for pieces like bishop, rook and queen. If the return value is false,
+            // it means the piece can't go further in the direction you are checking and the loop breaks (see below)
             bool checkSquare(int row, int col)
             {
                 if (row < 0 || row >= BoardLenght || col < 0 || col >= BoardLenght)
                     return false;
 
-                if (GetPieceAtBoardPos(row, col) == Piece.None)
+                if (boardToUse[row, col] == Piece.None)
                 {
-                    availableSquares.Add(new(row, col));
+                    availableMoves.Add(new(row, col));
                     return true;
                 }
 
-                if (GetPieceAtBoardPos(selectedPiece).GetColor() == PieceColor.White ?
-                    GetPieceAtBoardPos(row, col).IsBlack() : GetPieceAtBoardPos(row, col).IsWhite())
+                // If you get to the opponent piece, you can take it but can't go any further, so false is returned to indicate that
+                if (boardToUse[piece.Row, piece.Col].GetColor() == PieceColor.White ?
+                    boardToUse[row, col].IsBlack() : boardToUse[row, col].IsWhite())
                 {
-                    availableSquares.Add(new(row, col));
+                    availableMoves.Add(new(row, col));
                     return false;
                 }
 
                 return false;
             }
 
-            switch (GetPieceAtBoardPos(piece))
+            switch (boardToUse[piece.Row, piece.Col])
             {
                 case Piece.WhitePawn:
-                    if (piece.Row != RowNumToArrayIndex(8) && GetPieceAtBoardPos(piece.Row + 1, piece.Col) == Piece.None)
-                        availableSquares.Add(new(piece.Row + 1, piece.Col));
+                    if (piece.Row != RowNumToArrayIndex(8) && boardToUse[piece.Row + 1, piece.Col] == Piece.None)
+                        availableMoves.Add(new(piece.Row + 1, piece.Col));
 
-                    if (piece.Row == RowNumToArrayIndex(2) && GetPieceAtBoardPos(piece.Row + 2, piece.Col) == Piece.None)
-                        availableSquares.Add(new(piece.Row + 2, piece.Col));
+                    if (piece.Row == RowNumToArrayIndex(2) && boardToUse[piece.Row + 2, piece.Col] == Piece.None)
+                        availableMoves.Add(new(piece.Row + 2, piece.Col));
 
-                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('H') && GetPieceAtBoardPos(piece.Row + 1, piece.Col + 1).IsBlack())
-                        availableSquares.Add(new(piece.Row + 1, piece.Col + 1));
+                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row + 1, piece.Col + 1].IsBlack())
+                        availableMoves.Add(new(piece.Row + 1, piece.Col + 1));
 
-                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('A') && GetPieceAtBoardPos(piece.Row + 1, piece.Col - 1).IsBlack())
-                        availableSquares.Add(new(piece.Row + 1, piece.Col - 1));
+                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row + 1, piece.Col - 1].IsBlack())
+                        availableMoves.Add(new(piece.Row + 1, piece.Col - 1));
 
                     break;
 
                 case Piece.BlackPawn:
-                    if (piece.Row != RowNumToArrayIndex(1) && GetPieceAtBoardPos(piece.Row - 1, piece.Col) == Piece.None)
-                        availableSquares.Add(new(piece.Row - 1, piece.Col));
+                    if (piece.Row != RowNumToArrayIndex(1) && boardToUse[piece.Row - 1, piece.Col] == Piece.None)
+                        availableMoves.Add(new(piece.Row - 1, piece.Col));
 
-                    if (piece.Row == RowNumToArrayIndex(7) && GetPieceAtBoardPos(piece.Row - 2, piece.Col) == Piece.None)
-                        availableSquares.Add(new(piece.Row - 2, piece.Col));
+                    if (piece.Row == RowNumToArrayIndex(7) && boardToUse[piece.Row - 2, piece.Col] == Piece.None)
+                        availableMoves.Add(new(piece.Row - 2, piece.Col));
 
-                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('H') && GetPieceAtBoardPos(piece.Row - 1, piece.Col + 1).IsWhite())
-                        availableSquares.Add(new(piece.Row - 1, piece.Col + 1));
+                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row - 1, piece.Col + 1].IsWhite())
+                        availableMoves.Add(new(piece.Row - 1, piece.Col + 1));
 
-                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('A') && GetPieceAtBoardPos(piece.Row - 1, piece.Col - 1).IsWhite())
-                        availableSquares.Add(new(piece.Row - 1, piece.Col - 1));
+                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row - 1, piece.Col - 1].IsWhite())
+                        availableMoves.Add(new(piece.Row - 1, piece.Col - 1));
 
                     break;
 
@@ -417,25 +561,25 @@ namespace Chess
                     { if (!checkSquare(row, col)) break; }
 
                     for (int row = piece.Row + 1; row < BoardLenght; row++) { if (!checkSquare(row, piece.Col)) break; }
-                    for (int row = piece.Row - 1; row >= 0; row--) { if (!checkSquare(row, piece.Col)) break; }
+                    for (int row = piece.Row - 1; row >= 0; row--)          { if (!checkSquare(row, piece.Col)) break; }
                     for (int col = piece.Col + 1; col < BoardLenght; col++) { if (!checkSquare(piece.Row, col)) break; }
-                    for (int col = piece.Col - 1; col >= 0; col--) { if (!checkSquare(piece.Row, col)) break; }
+                    for (int col = piece.Col - 1; col >= 0; col--)          { if (!checkSquare(piece.Row, col)) break; }
                     break;
 
                 case Piece.WhiteKing:
                 case Piece.BlackKing:
-                    checkSquare(selectedPiece.Row + 1, selectedPiece.Col + 1);
-                    checkSquare(selectedPiece.Row + 1, selectedPiece.Col - 1);
-                    checkSquare(selectedPiece.Row - 1, selectedPiece.Col + 1);
-                    checkSquare(selectedPiece.Row - 1, selectedPiece.Col - 1);
-                    checkSquare(selectedPiece.Row + 1, selectedPiece.Col);
-                    checkSquare(selectedPiece.Row - 1, selectedPiece.Col);
-                    checkSquare(selectedPiece.Row, selectedPiece.Col + 1);
-                    checkSquare(selectedPiece.Row, selectedPiece.Col - 1);
+                    checkSquare(piece.Row + 1, piece.Col + 1);
+                    checkSquare(piece.Row + 1, piece.Col - 1);
+                    checkSquare(piece.Row - 1, piece.Col + 1);
+                    checkSquare(piece.Row - 1, piece.Col - 1);
+                    checkSquare(piece.Row + 1, piece.Col);
+                    checkSquare(piece.Row - 1, piece.Col);
+                    checkSquare(piece.Row, piece.Col + 1);
+                    checkSquare(piece.Row, piece.Col - 1);
                     break;
             }
 
-            return availableSquares;
+            return availableMoves;
         }
     }
 }

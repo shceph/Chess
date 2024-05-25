@@ -4,30 +4,42 @@ namespace Chess
 {
     public partial class MainForm : Form
     {
+        public static bool IsCheckmate { get; set; }
+        public static bool IsStalemate { get; set; }
+        public static PieceColor WhoWon { get; set; }
+
         private readonly Graphics graphics;
         private readonly Brush saddleBrownBrush;
         private readonly Brush sandyBrownBrush;
+        private readonly Brush selectedBrush;
+        private readonly Color selectedColor;
         private readonly Point boardTopLeft;
-        private readonly int boardLenghtInPixels;
+        //private readonly int boardLenghtInPixels;
         private readonly float boardSquareLenghtInPixels;
         private readonly Image[] pieceImages;
         public MainForm()
         {
             InitializeComponent();
 
+            IsCheckmate = false;
+            IsStalemate = false;
+            WhoWon = PieceColor.White;
+
             graphics = CreateGraphics();
             graphics.TranslateTransform(0, menuStrip.Height);
             saddleBrownBrush = new SolidBrush(Color.SaddleBrown);
             sandyBrownBrush = new SolidBrush(Color.SandyBrown);
+            selectedColor = Color.FromArgb(122, Color.Bisque.R, Color.Bisque.G, Color.Bisque.B);
+            selectedBrush = new SolidBrush(selectedColor);
 
             boardTopLeft.Y = 0;
-            boardTopLeft.X = (ClientRectangle.Width - ClientRectangle.Height) / 2;
+            boardTopLeft.X = (ClientRectangle.Width - (ClientRectangle.Height - menuStrip.Height)) / 2;
 
             float rectHeight = (float)(ClientRectangle.Height - menuStrip.Height) / 8.0f;
             float rectWidth = (float)ClientRectangle.Width / 8.0f;
             boardSquareLenghtInPixels = Math.Min(rectWidth, rectHeight);
 
-            boardLenghtInPixels = ClientRectangle.Width - ((ClientRectangle.Height + menuStrip.Height) / 2);
+            //boardLenghtInPixels = ClientRectangle.Width - ((ClientRectangle.Height + menuStrip.Height) / 2);
 
             pieceImages = new Image[Game.PieceImagesPaths.Length];
 
@@ -48,7 +60,7 @@ namespace Chess
 
             if (Game.SelectedPiece.IsSelected())
             {
-                squaresToHighlight = Game.GetAvailableSquares(Game.SelectedPiece);
+                squaresToHighlight = Game.GetAvailableMoves(Game.SelectedPiece, Game.Board);
                 squaresToHighlight.Add(Game.SelectedPiece);
 
                 if (Game.View == View.WhitePOV)
@@ -72,18 +84,13 @@ namespace Chess
                     float x = j * boardSquareLenghtInPixels + boardTopLeft.X;
                     float y = i * boardSquareLenghtInPixels + boardTopLeft.Y;
 
-                    if ((Game.View == View.BlackPOV && (i + j) % 2 == 0) || (Game.View == View.WhitePOV && (i + j) % 2 != 0))
+                    if ((i + j) % 2 != 0)
                         graphics.FillRectangle(sandyBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
                     else
                         graphics.FillRectangle(saddleBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
 
                     if (squaresToHighlight.Contains(new(i, j)))
-                    {
-                        //Color.Bisque;
-                        Color color = Color.FromArgb(75, Color.Bisque.R, Color.Bisque.G, Color.Bisque.B);
-                        Brush selectedBrush = new SolidBrush(color);
                         graphics.FillRectangle(selectedBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
-                    }
 
                     Piece currentPiece = Game.GetPieceAtBoardPosPOVAdjusted(i, j);
 
@@ -99,9 +106,34 @@ namespace Chess
             }
         }
 
+        private void HandleCheckmate()
+        {
+            MessageBox.Show($"{(WhoWon == PieceColor.White ? "White" : "Black")} won!\nClick OK to reset the game", "Congratulations!");
+            ResetGame();
+        }
+
+        private void HandleRemi()
+        {
+            MessageBox.Show("It's remi!\nClick OK to reset the game", "Remi");
+            ResetGame();
+        }
+
+        private void ResetGame()
+        {
+            Game.Reset();
+            IsCheckmate = false;
+            IsStalemate = false;
+            Invalidate();
+        }
+
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
             DrawBoard();
+
+            if (IsCheckmate)
+                HandleCheckmate();
+            else if (IsStalemate)
+                HandleRemi();
         }
 
         private void SwitchViewSideToolStripMenuItem_Click(object sender, EventArgs e)
@@ -126,19 +158,24 @@ namespace Chess
             clientRelativePos.Y -= menuStrip.Height;
             clientRelativePos.X -= boardTopLeft.X;
 
-            if (clientRelativePos.X < 0 || clientRelativePos.Y < 0 || clientRelativePos.X >= boardLenghtInPixels || clientRelativePos.Y >= boardLenghtInPixels)
-                return;
-
             int row = clientRelativePos.Y / (int)boardSquareLenghtInPixels;
             int col = clientRelativePos.X / (int)boardSquareLenghtInPixels;
 
-            if (Game.SelectPiece(row, col))
+            if (row < 0 || col < 0 || row >= Game.BoardLenght || col >= Game.BoardLenght)
+                return;
+
+            if (Game.SelectPieceOrMoveSelected(row, col))
                 Invalidate();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ResetTheBoardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetGame();
         }
     }
 }
