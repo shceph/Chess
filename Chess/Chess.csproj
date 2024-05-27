@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="assets\icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="assets\pieces\bb.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -33,6 +33,7 @@
             // 
             // buttonStart
             // 
+            buttonStart.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             buttonStart.Location = new Point(144, 98);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(229, 69);
@@ -48,7 +49,7 @@
             ClientSize = new Size(521, 474);
             Controls.Add(buttonStart);
             Name = "OpeningForm";
-            Text = "OpeningForm";
+            Text = "Chess";
             ResumeLayout(false);
         }
 

@@ -30,10 +30,10 @@
         {
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            resetTheBoardToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             switchViewSideToolStripMenuItem = new ToolStripMenuItem();
-            resetTheBoardToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -56,10 +56,17 @@
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
             // 
+            // resetTheBoardToolStripMenuItem
+            // 
+            resetTheBoardToolStripMenuItem.Name = "resetTheBoardToolStripMenuItem";
+            resetTheBoardToolStripMenuItem.Size = new Size(197, 26);
+            resetTheBoardToolStripMenuItem.Text = "Reset the board";
+            resetTheBoardToolStripMenuItem.Click += ResetTheBoardToolStripMenuItem_Click;
+            // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(224, 26);
+            exitToolStripMenuItem.Size = new Size(197, 26);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -77,19 +84,13 @@
             switchViewSideToolStripMenuItem.Text = "Switch view side";
             switchViewSideToolStripMenuItem.Click += SwitchViewSideToolStripMenuItem_Click;
             // 
-            // resetTheBoardToolStripMenuItem
-            // 
-            resetTheBoardToolStripMenuItem.Name = "resetTheBoardToolStripMenuItem";
-            resetTheBoardToolStripMenuItem.Size = new Size(224, 26);
-            resetTheBoardToolStripMenuItem.Text = "Reset the board";
-            resetTheBoardToolStripMenuItem.Click += ResetTheBoardToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1182, 773);
             Controls.Add(menuStrip);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MainMenuStrip = menuStrip;
             Margin = new Padding(3, 4, 3, 4);

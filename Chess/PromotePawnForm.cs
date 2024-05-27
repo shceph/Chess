@@ -18,9 +18,10 @@ namespace Chess
 
         public PromotePawnForm(PieceColor pieceColor)
         {
-            this.pieceColor = pieceColor;
-
             InitializeComponent();
+
+            string iconPath = Path.Combine(Application.StartupPath, "assets", "icon.ico");
+            this.Icon = new Icon(iconPath);
 
             if (pieceColor == PieceColor.White)
             {
@@ -36,6 +37,8 @@ namespace Chess
                 pictureBoxBishop.ImageLocation = Game.PieceImagesPaths[(int)Piece.BlackBishop];
                 pictureBoxKnight.ImageLocation = Game.PieceImagesPaths[(int)Piece.BlackKnight];
             }
+
+            this.pieceColor = pieceColor;
         }
 
         private void PictureBoxQueen_MouseClick(object sender, MouseEventArgs e)

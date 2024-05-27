@@ -8,25 +8,24 @@ namespace Chess
         public static bool IsStalemate { get; set; }
         public static PieceColor WhoWon { get; set; }
 
-        private readonly Graphics graphics;
         private readonly Brush saddleBrownBrush;
         private readonly Brush sandyBrownBrush;
         private readonly Brush selectedBrush;
         private readonly Color selectedColor;
         private readonly Point boardTopLeft;
-        //private readonly int boardLenghtInPixels;
         private readonly float boardSquareLenghtInPixels;
         private readonly Image[] pieceImages;
         public MainForm()
         {
             InitializeComponent();
 
+            string iconPath = Path.Combine(Application.StartupPath, "assets", "icon.ico");
+            this.Icon = new Icon(iconPath);
+
             IsCheckmate = false;
             IsStalemate = false;
             WhoWon = PieceColor.White;
 
-            graphics = CreateGraphics();
-            graphics.TranslateTransform(0, menuStrip.Height);
             saddleBrownBrush = new SolidBrush(Color.SaddleBrown);
             sandyBrownBrush = new SolidBrush(Color.SandyBrown);
             selectedColor = Color.FromArgb(122, Color.Bisque.R, Color.Bisque.G, Color.Bisque.B);
@@ -39,8 +38,6 @@ namespace Chess
             float rectWidth = (float)ClientRectangle.Width / 8.0f;
             boardSquareLenghtInPixels = Math.Min(rectWidth, rectHeight);
 
-            //boardLenghtInPixels = ClientRectangle.Width - ((ClientRectangle.Height + menuStrip.Height) / 2);
-
             pieceImages = new Image[Game.PieceImagesPaths.Length];
 
             for (int i = 0; i < pieceImages.Length; i++)
@@ -52,7 +49,7 @@ namespace Chess
             }
         }
 
-        private void DrawBoard()
+        private void DrawBoard(Graphics graphics)
         {
             graphics.Clear(Color.DarkSlateGray);
 
@@ -112,7 +109,7 @@ namespace Chess
             ResetGame();
         }
 
-        private void HandleRemi()
+        private void HandleStalemate()
         {
             MessageBox.Show("It's remi!\nClick OK to reset the game", "Remi");
             ResetGame();
@@ -128,12 +125,15 @@ namespace Chess
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            DrawBoard();
+            e.Graphics.TranslateTransform(0, menuStrip.Height);
+            DrawBoard(e.Graphics);
+
+            e.Dispose();
 
             if (IsCheckmate)
                 HandleCheckmate();
             else if (IsStalemate)
-                HandleRemi();
+                HandleStalemate();
         }
 
         private void SwitchViewSideToolStripMenuItem_Click(object sender, EventArgs e)

@@ -15,12 +15,17 @@ namespace Chess
         public OpeningForm()
         {
             InitializeComponent();
+
+            string iconPath = Path.Combine(Application.StartupPath, "assets", "icon.ico");
+            this.Icon = new Icon(iconPath);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new();
+            this.Hide();
             mainForm.ShowDialog();
+            this.Show();
         }
     }
 }
