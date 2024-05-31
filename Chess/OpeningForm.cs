@@ -12,6 +12,7 @@ namespace Chess
 {
     public partial class OpeningForm : Form
     {
+
         public OpeningForm()
         {
             InitializeComponent();
@@ -20,12 +21,48 @@ namespace Chess
             this.Icon = new Icon(iconPath);
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void ButtonStart_Click(object sender, EventArgs e)
         {
-            MainForm mainForm = new();
+            using MainForm mainForm = new();
             this.Hide();
             mainForm.ShowDialog();
             this.Show();
+        }
+
+        private void ButtonHost_Click(object sender, EventArgs e)
+        {
+            if (textBoxUsername.Text == string.Empty)
+            {
+                MessageBox.Show("You need to provide a username!", "No username");
+                return;
+            }
+
+            if (!Globals.SetUsername(textBoxUsername.Text))
+            {
+                MessageBox.Show("Your username must contain only letters and digits!", "Wrong username");
+                return;
+            }
+
+            using HostGameForm hgf = new();
+            hgf.ShowDialog();
+        }
+
+        private void ButtonStartOnline_Click(object sender, EventArgs e)
+        {
+            if (textBoxUsername.Text == string.Empty)
+            {
+                MessageBox.Show("You need to provide a username!", "No username");
+                return;
+            }
+
+            if (!Globals.SetUsername(textBoxUsername.Text))
+            {
+                MessageBox.Show("Your username must conatain only letters and digits!", "Wrong username");
+                return;
+            }
+
+            using OnlineGamesForm ogf = new();
+            ogf.ShowDialog();
         }
     }
 }

@@ -29,32 +29,86 @@
         private void InitializeComponent()
         {
             buttonStart = new Button();
+            buttonStartOnline = new Button();
+            buttonHost = new Button();
+            labelUsername = new Label();
+            textBoxUsername = new TextBox();
             SuspendLayout();
             // 
             // buttonStart
             // 
             buttonStart.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStart.Location = new Point(144, 98);
+            buttonStart.Location = new Point(12, 15);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(229, 69);
+            buttonStart.Size = new Size(497, 69);
             buttonStart.TabIndex = 0;
-            buttonStart.Text = "Start the game";
+            buttonStart.Text = "Start 1v1 locally";
             buttonStart.UseVisualStyleBackColor = true;
-            buttonStart.Click += buttonStart_Click;
+            buttonStart.Click += ButtonStart_Click;
+            // 
+            // buttonStartOnline
+            // 
+            buttonStartOnline.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonStartOnline.Location = new Point(12, 90);
+            buttonStartOnline.Name = "buttonStartOnline";
+            buttonStartOnline.Size = new Size(497, 69);
+            buttonStartOnline.TabIndex = 0;
+            buttonStartOnline.Text = "Find an online game";
+            buttonStartOnline.UseVisualStyleBackColor = true;
+            buttonStartOnline.Click += ButtonStartOnline_Click;
+            // 
+            // buttonHost
+            // 
+            buttonHost.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonHost.Location = new Point(12, 165);
+            buttonHost.Name = "buttonHost";
+            buttonHost.Size = new Size(497, 69);
+            buttonHost.TabIndex = 0;
+            buttonHost.Text = "Host a game";
+            buttonHost.UseVisualStyleBackColor = true;
+            buttonHost.Click += ButtonHost_Click;
+            // 
+            // labelUsername
+            // 
+            labelUsername.AutoSize = true;
+            labelUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelUsername.Location = new Point(12, 293);
+            labelUsername.Name = "labelUsername";
+            labelUsername.Size = new Size(459, 20);
+            labelUsername.TabIndex = 1;
+            labelUsername.Text = "Insert your username (mandatory for online games):";
+            // 
+            // textBoxUsername
+            // 
+            textBoxUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxUsername.Location = new Point(12, 330);
+            textBoxUsername.MaxLength = 20;
+            textBoxUsername.Name = "textBoxUsername";
+            textBoxUsername.Size = new Size(306, 25);
+            textBoxUsername.TabIndex = 2;
             // 
             // OpeningForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(521, 474);
+            ClientSize = new Size(521, 390);
+            Controls.Add(textBoxUsername);
+            Controls.Add(labelUsername);
+            Controls.Add(buttonHost);
+            Controls.Add(buttonStartOnline);
             Controls.Add(buttonStart);
             Name = "OpeningForm";
             Text = "Chess";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button buttonStart;
+        private Button buttonStartOnline;
+        private Button buttonHost;
+        private Label labelUsername;
+        private TextBox textBoxUsername;
     }
 }

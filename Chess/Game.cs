@@ -36,34 +36,22 @@ namespace Chess
     {
         public static bool IsWhite(this Piece piece)
         {
-            switch (piece)
+            return piece switch
             {
-                case Piece.WhitePawn:
-                case Piece.WhiteBishop:
-                case Piece.WhiteKnight:
-                case Piece.WhiteRook:
-                case Piece.WhiteKing:
-                case Piece.WhiteQueen:
-                    return true;
-                default:
-                    return false;
-            }
+                Piece.WhitePawn or Piece.WhiteBishop or Piece.WhiteKnight or
+                Piece.WhiteRook or Piece.WhiteKing or Piece.WhiteQueen => true,
+                _ => false,
+            };
         }
 
         public static bool IsBlack(this Piece piece)
         {
-            switch (piece)
+            return piece switch
             {
-                case Piece.BlackPawn:
-                case Piece.BlackBishop:
-                case Piece.BlackKnight:
-                case Piece.BlackRook:
-                case Piece.BlackKing:
-                case Piece.BlackQueen:
-                    return true;
-                default:
-                    return false;
-            }
+                Piece.BlackPawn or Piece.BlackBishop or Piece.BlackKnight or
+                Piece.BlackRook or Piece.BlackKing or Piece.BlackQueen => true,
+                _ => false,
+            };
         }
 
         public static PieceColor GetColor(this Piece piece)
@@ -183,6 +171,8 @@ namespace Chess
               Piece.BlackKing, Piece.BlackBishop, Piece.BlackKnight, Piece.BlackRook }
         };
 
+        public static readonly string InitialBoardString = GetBoardString(initialBoard);
+
         private static readonly Piece[,] board;
         public static Piece[,] Board { get { return board; } }
 
@@ -221,6 +211,46 @@ namespace Chess
 
             selectedPiece.Unselect();
             WhoseTurn = PieceColor.White;
+        }
+
+        public static string GetBoardString(Piece[,] boardToUse)
+        {
+            string ret = "";
+
+            foreach (var piece in boardToUse)
+            {
+                switch (piece)
+                {
+                    case Piece.WhitePawn:
+                        ret += 'P'; break;
+                    case Piece.BlackPawn:
+                        ret += 'p'; break;
+                    case Piece.WhiteKnight:
+                        ret += 'K'; break;
+                    case Piece.BlackKnight:
+                        ret += 'k'; break;
+                    case Piece.WhiteBishop:
+                        ret += 'B'; break;
+                    case Piece.BlackBishop:
+                        ret += 'b'; break;
+                    case Piece.WhiteRook:
+                        ret += 'R'; break;
+                    case Piece.BlackRook:
+                        ret += 'r'; break;
+                    case Piece.WhiteQueen:
+                        ret += 'Q'; break;
+                    case Piece.BlackQueen:
+                        ret += 'q'; break;
+                    case Piece.WhiteKing:
+                        ret += 'K'; break;
+                    case Piece.BlackKing:
+                        ret += 'k'; break;
+                    case Piece.None:
+                        ret += '-'; break;
+                }
+            }
+
+            return ret;
         }
 
         public static Piece GetPieceAtBoardPosPOVAdjusted(int row, int col)

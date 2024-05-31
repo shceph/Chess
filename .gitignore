@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Don't want critical Sql server info on github
+Chess/assets/sql_connection_string.txt

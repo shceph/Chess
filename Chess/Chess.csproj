@@ -10,8 +10,15 @@
 
   <ItemGroup>
     <Compile Remove="assets\pieces\old\**" />
+    <Compile Remove="sql_queries\**" />
     <EmbeddedResource Remove="assets\pieces\old\**" />
+    <EmbeddedResource Remove="sql_queries\**" />
     <None Remove="assets\pieces\old\**" />
+    <None Remove="sql_queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +59,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="assets\pieces\wr.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\sql_connection_string.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
