@@ -30,7 +30,6 @@
         {
             buttonStart = new Button();
             buttonStartOnline = new Button();
-            buttonHost = new Button();
             labelUsername = new Label();
             textBoxUsername = new TextBox();
             SuspendLayout();
@@ -56,17 +55,6 @@
             buttonStartOnline.Text = "Find an online game";
             buttonStartOnline.UseVisualStyleBackColor = true;
             buttonStartOnline.Click += ButtonStartOnline_Click;
-            // 
-            // buttonHost
-            // 
-            buttonHost.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonHost.Location = new Point(12, 165);
-            buttonHost.Name = "buttonHost";
-            buttonHost.Size = new Size(497, 69);
-            buttonHost.TabIndex = 0;
-            buttonHost.Text = "Host a game";
-            buttonHost.UseVisualStyleBackColor = true;
-            buttonHost.Click += ButtonHost_Click;
             // 
             // labelUsername
             // 
@@ -94,9 +82,9 @@
             ClientSize = new Size(521, 390);
             Controls.Add(textBoxUsername);
             Controls.Add(labelUsername);
-            Controls.Add(buttonHost);
             Controls.Add(buttonStartOnline);
             Controls.Add(buttonStart);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "OpeningForm";
             Text = "Chess";
             ResumeLayout(false);
@@ -107,7 +95,6 @@
 
         private Button buttonStart;
         private Button buttonStartOnline;
-        private Button buttonHost;
         private Label labelUsername;
         private TextBox textBoxUsername;
     }

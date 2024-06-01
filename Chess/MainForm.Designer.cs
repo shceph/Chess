@@ -51,6 +51,7 @@
             // 
             // fileToolStripMenuItem
             // 
+            fileToolStripMenuItem.BackColor = SystemColors.ActiveCaption;
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetTheBoardToolStripMenuItem, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
@@ -58,20 +59,23 @@
             // 
             // resetTheBoardToolStripMenuItem
             // 
+            resetTheBoardToolStripMenuItem.BackColor = SystemColors.Control;
             resetTheBoardToolStripMenuItem.Name = "resetTheBoardToolStripMenuItem";
-            resetTheBoardToolStripMenuItem.Size = new Size(197, 26);
+            resetTheBoardToolStripMenuItem.Size = new Size(224, 26);
             resetTheBoardToolStripMenuItem.Text = "Reset the board";
             resetTheBoardToolStripMenuItem.Click += ResetTheBoardToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
+            exitToolStripMenuItem.BackColor = SystemColors.Control;
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(197, 26);
+            exitToolStripMenuItem.Size = new Size(224, 26);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
+            viewToolStripMenuItem.BackColor = SystemColors.ActiveCaption;
             viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { switchViewSideToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(55, 24);
@@ -80,7 +84,7 @@
             // switchViewSideToolStripMenuItem
             // 
             switchViewSideToolStripMenuItem.Name = "switchViewSideToolStripMenuItem";
-            switchViewSideToolStripMenuItem.Size = new Size(200, 26);
+            switchViewSideToolStripMenuItem.Size = new Size(224, 26);
             switchViewSideToolStripMenuItem.Text = "Switch view side";
             switchViewSideToolStripMenuItem.Click += SwitchViewSideToolStripMenuItem_Click;
             // 
@@ -91,7 +95,7 @@
             ClientSize = new Size(1182, 773);
             Controls.Add(menuStrip);
             DoubleBuffered = true;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
             Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";

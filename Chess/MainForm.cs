@@ -19,8 +19,7 @@ namespace Chess
         {
             InitializeComponent();
 
-            string iconPath = Path.Combine(Application.StartupPath, "assets", "icon.ico");
-            this.Icon = new Icon(iconPath);
+            Icon = new Icon(Globals.IconPath);
 
             IsCheckmate = false;
             IsStalemate = false;
@@ -43,9 +42,13 @@ namespace Chess
             for (int i = 0; i < pieceImages.Length; i++)
             {
                 if (File.Exists(Game.PieceImagesPaths[i]))
+                {
                     pieceImages[i] = Image.FromFile(Game.PieceImagesPaths[i]);
+                }
                 else
+                {
                     throw new FileNotFoundException($"Image file not found: {Game.PieceImagesPaths[i]}");
+                }
             }
         }
 
@@ -82,17 +85,25 @@ namespace Chess
                     float y = i * boardSquareLenghtInPixels + boardTopLeft.Y;
 
                     if ((i + j) % 2 != 0)
+                    {
                         graphics.FillRectangle(sandyBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
+                    }
                     else
+                    {
                         graphics.FillRectangle(saddleBrownBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
+                    }
 
                     if (squaresToHighlight.Contains(new(i, j)))
+                    {
                         graphics.FillRectangle(selectedBrush, x, y, boardSquareLenghtInPixels, boardSquareLenghtInPixels);
+                    }
 
                     Piece currentPiece = Game.GetPieceAtBoardPosPOVAdjusted(i, j);
 
                     if (currentPiece == Piece.None)
+                    {
                         continue;
+                    }
 
                     graphics.DrawImage(
                         pieceImages[(int)currentPiece],
@@ -131,9 +142,13 @@ namespace Chess
             e.Dispose();
 
             if (IsCheckmate)
+            {
                 HandleCheckmate();
+            }
             else if (IsStalemate)
+            {
                 HandleStalemate();
+            }
         }
 
         private void SwitchViewSideToolStripMenuItem_Click(object sender, EventArgs e)
@@ -149,7 +164,9 @@ namespace Chess
             if (e.Button == MouseButtons.Right)
             {
                 if (Game.UnselectPiece())
+                {
                     Invalidate();
+                }
 
                 return;
             }
@@ -162,10 +179,14 @@ namespace Chess
             int col = clientRelativePos.X / (int)boardSquareLenghtInPixels;
 
             if (row < 0 || col < 0 || row >= Game.BoardLenght || col >= Game.BoardLenght)
+            {
                 return;
+            }
 
             if (Game.SelectPieceOrMoveSelected(row, col))
+            {
                 Invalidate();
+            }
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)

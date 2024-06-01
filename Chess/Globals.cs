@@ -9,6 +9,8 @@ namespace Chess
 {
     internal static class Globals
     {
+        public const string IconPath = "assets/icon.ico";
+
         public const string ConnectionStringFilePath = "assets/sql_connection_string.txt";
 
         private static readonly string connectionString = "";

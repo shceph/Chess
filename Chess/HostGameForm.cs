@@ -13,15 +13,13 @@ namespace Chess
 {
     public partial class HostGameForm : Form
     {
-        private Guid? gameId = null;
-        public Guid? GameId { get { return gameId; } } 
+        private static Guid? gameId = null;
+        public static Guid? GameId { get { return gameId; } } 
 
         public HostGameForm()
         {
             InitializeComponent();
-
-            string iconPath = Path.Combine(Application.StartupPath, "assets", "icon.ico");
-            this.Icon = new Icon(iconPath);
+            Icon = new Icon(Globals.IconPath);
         }
 
         private void ButtonHost_Click(object sender, EventArgs e)
@@ -44,7 +42,7 @@ namespace Chess
                     OUTPUT INSERTED.game_id
                     VALUES (NEWID(), @host_username, NULL, @description, 1, @board_string)";
 
-                using SqlCommand command = new SqlCommand(query, connection);
+                using SqlCommand command = new(query, connection);
 
                 string? description = null;
 
@@ -66,6 +64,8 @@ namespace Chess
             {
                 MessageBox.Show(ex.Message, "Error");
             }
+
+            Close();
         }
     }
 }

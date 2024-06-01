@@ -57,9 +57,13 @@ namespace Chess
         public static PieceColor GetColor(this Piece piece)
         {
             if (piece.IsWhite())
+            {
                 return PieceColor.White;
+            }
             else
+            {
                 return PieceColor.Black;
+            }
         }
     }
 
@@ -101,10 +105,14 @@ namespace Chess
             selected = true;
 
             if (row < 0 || row >= Game.BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(row));
+            }
 
             if (col < 0 || col >= Game.BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(col));
+            }
 
             this.row = row;
             this.col = col;
@@ -124,7 +132,9 @@ namespace Chess
         public readonly Piece GetPiece()
         {
             if (!selected)
+            {
                 return Piece.None;
+            }
 
             return Game.Board[row, col];
         }
@@ -194,9 +204,13 @@ namespace Chess
         public static void SwapTurn()
         {
             if (WhoseTurn == PieceColor.White)
+            {
                 WhoseTurn = PieceColor.Black;
+            }
             else
+            {
                 WhoseTurn = PieceColor.White;
+            }
         }
 
         public static void Reset()
@@ -256,13 +270,19 @@ namespace Chess
         public static Piece GetPieceAtBoardPosPOVAdjusted(int row, int col)
         {
             if (row < 0 || row >= BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(row));
+            }
 
             if (col < 0 || col >= BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(col));
+            }
 
             if (View == View.BlackPOV)
+            {
                 return board[row, col];
+            }
 
             return board[BoardLenght - 1 - row, BoardLenght - 1 - col];
         }
@@ -280,10 +300,14 @@ namespace Chess
         public static bool SelectPieceOrMoveSelected(int row, int col)
         {
             if (row < 0 || row >= BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(row));
+            }
 
             if (col < 0 || col >= BoardLenght)
+            {
                 throw new ArgumentOutOfRangeException(nameof(col));
+            }
 
             if (View == View.WhitePOV)
             {
@@ -305,9 +329,13 @@ namespace Chess
                     Piece selectedPieceSquareOldVal = board[selectedRow, selectedCol];
 
                     if (board[row, col] == Piece.None)
+                    {
                         (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], board[row, col]);
+                    }
                     else
+                    {
                         (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], Piece.None);
+                    }
 
                     if (IsInCheck(board[row, col].GetColor(), board))
                     {
@@ -348,9 +376,13 @@ namespace Chess
                 else  // if (availableMoves.Contains(new(row, col)))
                 {
                     if (board[row, col] == Piece.None || (RespectMoveRights && board[row, col].GetColor() != WhoseTurn))
+                    {
                         selectedPiece.Unselect();
+                    }
                     else
+                    {
                         selectedPiece.Select(row, col);
+                    }
 
                     return true;
                 }
@@ -372,7 +404,9 @@ namespace Chess
         public static bool UnselectPiece()
         {
             if (!selectedPiece.IsSelected())
+            {
                 return false;
+            }
 
             selectedPiece.Unselect();
             return true;
@@ -381,7 +415,9 @@ namespace Chess
         private static int ColumnMarkToArrayIndex(char col)
         {
             if (col < 'A' || col > 'H')
+            {
                 throw new ArgumentOutOfRangeException(nameof(col));
+            }
 
             return col - 'A';
         }
@@ -389,7 +425,9 @@ namespace Chess
         private static int RowNumToArrayIndex(int row)
         {
             if (row < 1 || row > 8)
+            {
                 throw new ArgumentOutOfRangeException(nameof(row));
+            }
 
             return row - 1;
         }
@@ -415,7 +453,9 @@ namespace Chess
             }
 
             if (!kingIndex.IsSelected())
+            {
                 throw new Exception($"{(kingToSearchFor == Piece.WhiteKing ? "White" : "Black")} king not found");
+            }
 
             for (int i = 0; i < BoardLenght; i++)
             {
@@ -427,7 +467,9 @@ namespace Chess
                         List<BoardIndex> blackPieceAvailableSquares = GetAvailableMoves(new(i, j), boardToUse);
 
                         if (blackPieceAvailableSquares.Contains(kingIndex))
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -469,12 +511,18 @@ namespace Chess
                             Piece moveRowMoveColOldVal = tempBoard[move.Row, move.Col];
 
                             if (moveRowMoveColOldVal == Piece.None)
+                            {
                                 (tempBoard[i, j], tempBoard[move.Row, move.Col]) = (tempBoard[move.Row, move.Col], tempBoard[i, j]);
+                            }
                             else
+                            {
                                 (tempBoard[i, j], tempBoard[move.Row, move.Col]) = (Piece.None, tempBoard[i, j]);
+                            }
 
                             if (!IsInCheck(side, tempBoard))
+                            {
                                 return false;
+                            }
 
                             tempBoard[i, j] = ijOldVal;
                             tempBoard[move.Row, move.Col] = moveRowMoveColOldVal;
@@ -495,7 +543,9 @@ namespace Chess
             bool checkSquare(int row, int col)
             {
                 if (row < 0 || row >= BoardLenght || col < 0 || col >= BoardLenght)
+                {
                     return false;
+                }
 
                 if (boardToUse[row, col] == Piece.None)
                 {
@@ -518,31 +568,47 @@ namespace Chess
             {
                 case Piece.WhitePawn:
                     if (piece.Row != RowNumToArrayIndex(8) && boardToUse[piece.Row + 1, piece.Col] == Piece.None)
+                    {
                         availableMoves.Add(new(piece.Row + 1, piece.Col));
+                    }
 
                     if (piece.Row == RowNumToArrayIndex(2) && boardToUse[piece.Row + 2, piece.Col] == Piece.None)
+                    {
                         availableMoves.Add(new(piece.Row + 2, piece.Col));
+                    }
 
                     if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row + 1, piece.Col + 1].IsBlack())
+                    {
                         availableMoves.Add(new(piece.Row + 1, piece.Col + 1));
+                    }
 
                     if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row + 1, piece.Col - 1].IsBlack())
+                    {
                         availableMoves.Add(new(piece.Row + 1, piece.Col - 1));
+                    }
 
                     break;
 
                 case Piece.BlackPawn:
                     if (piece.Row != RowNumToArrayIndex(1) && boardToUse[piece.Row - 1, piece.Col] == Piece.None)
+                    {
                         availableMoves.Add(new(piece.Row - 1, piece.Col));
+                    }
 
                     if (piece.Row == RowNumToArrayIndex(7) && boardToUse[piece.Row - 2, piece.Col] == Piece.None)
+                    {
                         availableMoves.Add(new(piece.Row - 2, piece.Col));
+                    }
 
                     if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row - 1, piece.Col + 1].IsWhite())
+                    {
                         availableMoves.Add(new(piece.Row - 1, piece.Col + 1));
+                    }
 
                     if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row - 1, piece.Col - 1].IsWhite())
+                    {
                         availableMoves.Add(new(piece.Row - 1, piece.Col - 1));
+                    }
 
                     break;
 
