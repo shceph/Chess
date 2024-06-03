@@ -7,6 +7,34 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
+    public readonly struct Account(Guid id, string username, string password)
+    {
+        private readonly Guid id = id;
+        private readonly string username = username;
+        private readonly string password = password;
+
+        public readonly Guid ID { get { return id; } }
+        public readonly string Username { get { return username; } }
+        public readonly string Password { get { return password; } }
+
+        public static bool UsernameAndPasswordAreValid(string username, string password)
+        {
+            if (!username.All(char.IsLetterOrDigit))
+            {
+                MessageBox.Show("Your username is not valid. Only ASCII letters and numbers are allowed", "Invalid username");
+                return false;
+            }
+
+            if (!password.All(char.IsLetterOrDigit))
+            {
+                MessageBox.Show("Your password is not valid. Only ASCII letters and numbers are allowed", "Invalid password");
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     internal static class Globals
     {
         public const string IconPath = "assets/icon.ico";
@@ -16,8 +44,8 @@ namespace Chess
         private static readonly string connectionString = "";
         public static string ConnectionString { get { return connectionString; } }
 
-        private static string username = "";
-        public static string Username { get { return username; } }
+        private static Account? account = null;
+        public static Account? Account { get { return account; } set { account = value; } }
 
         static Globals()
         {
@@ -31,15 +59,16 @@ namespace Chess
             }
         }
 
-        public static bool SetUsername(string usrname)
+        public static void SetAccountToNull()
         {
-            if (usrname.All(char.IsLetterOrDigit))
-            {
-                username = usrname;
-                return true;
-            }
-
-            return false;
+            account = null;
         }
+
+        //public static bool SetAccount(Guid id, string username, string password)
+        //{
+        //    account = new Account(id, username, password);
+
+        //    return false;
+        //}
     }
 }

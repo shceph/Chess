@@ -1,14 +1,27 @@
-CREATE TABLE ChessGames (
-	game_id UNIQUEIDENTIFIER PRIMARY KEY,
-	host_username VARCHAR(20) NOT NULL,
-	guest_username VARCHAR(20),
+CREATE TABLE Accounts (
+	id UNIQUEIDENTIFIER PRIMARY KEY,
+	username VARCHAR(20) NOT NULL,
+	password VARCHAR(20) NOT NULL
+)
+
+CREATE TABLE Games (
+	id UNIQUEIDENTIFIER PRIMARY KEY,
 	game_description VARCHAR(255),
 	is_whites_turn BIT NOT NULL,
-	board VARCHAR(64) NOT NULL
-);
+	board VARCHAR(64) NOT NULL,
+
+	host_id UNIQUEIDENTIFIER NOT NULL,
+	guest_id UNIQUEIDENTIFIER DEFAULT NULL,
+	FOREIGN KEY (host_id) REFERENCES Accounts(id),
+	FOREIGN KEY (guest_id) REFERENCES Accounts(id)
+)
 
 CREATE TABLE JoinRequests (
-  	request_id UNIQUEIDENTIFIER PRIMARY KEY,
+  	id UNIQUEIDENTIFIER PRIMARY KEY,
+	accepted BIT NOT NULL DEFAULT 0,
+
 	game_id UNIQUEIDENTIFIER NOT NULL,
-	FOREIGN KEY (game_id) REFERENCES ChessGames(game_id)
+	requestor_id UNIQUEIDENTIFIER NOT NULL,
+	FOREIGN KEY (game_id) REFERENCES Games(id),
+	FOREIGN KEY (requestor_id) REFERENCES Accounts(id),
 );

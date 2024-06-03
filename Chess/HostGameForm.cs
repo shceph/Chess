@@ -14,7 +14,7 @@ namespace Chess
     public partial class HostGameForm : Form
     {
         private static Guid? gameId = null;
-        public static Guid? GameId { get { return gameId; } } 
+        public static Guid? GameID { get { return gameId; } } 
 
         public HostGameForm()
         {
@@ -22,15 +22,61 @@ namespace Chess
             Icon = new Icon(Globals.IconPath);
         }
 
-        private void ButtonHost_Click(object sender, EventArgs e)
+        public static bool IsHosted()
         {
+            if (Globals.Account == null)
+            {
+                MessageBox.Show("You aren't logged in", "Log in");
+                return false;
+            }
+
+            if (GameID != null)
+            {
+                return true;
+            }
+
             using SqlConnection connection = new(Globals.ConnectionString);
 
             try
             {
-                if (Globals.Username == string.Empty)
+                connection.Open();
+
+                // Perform database operations here
+                string query = @"
+                    SELECT Games.id FROM Games
+                    JOIN Accounts ON host_id = Accounts.id
+                    WHERE Accounts.id = @id";
+
+                using SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@id", Globals.Account.Value.ID);
+
+                gameId = (Guid?)command.ExecuteScalar();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+            return GameID != null;
+        }
+
+        private void ButtonHost_Click(object sender, EventArgs e)
+        {
+            if (GameID != null)
+            {
+                MessageBox.Show("You have already hosted the game", "Can't host");
+                return;
+            }
+
+            using SqlConnection connection = new(Globals.ConnectionString);
+
+            try
+            {
+                if (Globals.Account == null)
                 {
-                    throw new Exception("You must provide a username.");
+                    throw new Exception("You aren't logged in.");
                 }
 
                 // Open the connection
@@ -38,9 +84,9 @@ namespace Chess
 
                 // Perform database operations here
                 string query = @"
-                    INSERT INTO ChessGames (game_id, host_username, guest_username, game_description, is_whites_turn, board)
-                    OUTPUT INSERTED.game_id
-                    VALUES (NEWID(), @host_username, NULL, @description, 1, @board_string)";
+                    INSERT INTO Games (id, host_id, guest_id, game_description, is_whites_turn, board)
+                    OUTPUT INSERTED.id
+                    VALUES (NEWID(), @host_id, NULL, @description, 1, @board_string)";
 
                 using SqlCommand command = new(query, connection);
 
@@ -51,7 +97,7 @@ namespace Chess
                     description = textBoxDescription.Text;
                 }
 
-                command.Parameters.AddWithValue("@host_username", Globals.Username);
+                command.Parameters.AddWithValue("@host_id", Globals.Account.Value.ID);
                 command.Parameters.AddWithValue("@description", (object?)description ?? DBNull.Value);
                 command.Parameters.AddWithValue("@board_string", Game.InitialBoardString);
 

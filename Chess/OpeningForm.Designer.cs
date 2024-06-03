@@ -32,12 +32,20 @@
             buttonStartOnline = new Button();
             labelUsername = new Label();
             textBoxUsername = new TextBox();
+            textBoxPassword = new TextBox();
+            labelPassword = new Label();
+            buttonLogIn = new Button();
+            linkLabelNoAccount = new LinkLabel();
+            menuStrip = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            logOffToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // buttonStart
             // 
             buttonStart.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStart.Location = new Point(12, 15);
+            buttonStart.Location = new Point(12, 48);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(497, 69);
             buttonStart.TabIndex = 0;
@@ -48,7 +56,7 @@
             // buttonStartOnline
             // 
             buttonStartOnline.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStartOnline.Location = new Point(12, 90);
+            buttonStartOnline.Location = new Point(12, 123);
             buttonStartOnline.Name = "buttonStartOnline";
             buttonStartOnline.Size = new Size(497, 69);
             buttonStartOnline.TabIndex = 0;
@@ -60,33 +68,107 @@
             // 
             labelUsername.AutoSize = true;
             labelUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelUsername.Location = new Point(12, 293);
+            labelUsername.Location = new Point(12, 236);
             labelUsername.Name = "labelUsername";
-            labelUsername.Size = new Size(459, 20);
+            labelUsername.Size = new Size(198, 20);
             labelUsername.TabIndex = 1;
-            labelUsername.Text = "Insert your username (mandatory for online games):";
+            labelUsername.Text = "Insert your username:";
             // 
             // textBoxUsername
             // 
             textBoxUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBoxUsername.Location = new Point(12, 330);
+            textBoxUsername.Location = new Point(12, 273);
             textBoxUsername.MaxLength = 20;
             textBoxUsername.Name = "textBoxUsername";
-            textBoxUsername.Size = new Size(306, 25);
+            textBoxUsername.Size = new Size(237, 25);
             textBoxUsername.TabIndex = 2;
+            // 
+            // textBoxPassword
+            // 
+            textBoxPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxPassword.Location = new Point(272, 273);
+            textBoxPassword.MaxLength = 20;
+            textBoxPassword.Name = "textBoxPassword";
+            textBoxPassword.PasswordChar = '*';
+            textBoxPassword.Size = new Size(237, 25);
+            textBoxPassword.TabIndex = 4;
+            // 
+            // labelPassword
+            // 
+            labelPassword.AutoSize = true;
+            labelPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelPassword.Location = new Point(272, 236);
+            labelPassword.Name = "labelPassword";
+            labelPassword.Size = new Size(198, 20);
+            labelPassword.TabIndex = 3;
+            labelPassword.Text = "Insert your password:";
+            // 
+            // buttonLogIn
+            // 
+            buttonLogIn.Font = new Font("Cascadia Mono", 9F);
+            buttonLogIn.Location = new Point(199, 325);
+            buttonLogIn.Name = "buttonLogIn";
+            buttonLogIn.Size = new Size(127, 29);
+            buttonLogIn.TabIndex = 5;
+            buttonLogIn.Text = "Log in";
+            buttonLogIn.UseVisualStyleBackColor = true;
+            buttonLogIn.Click += ButtonLogIn_Click;
+            // 
+            // linkLabelNoAccount
+            // 
+            linkLabelNoAccount.AutoSize = true;
+            linkLabelNoAccount.Location = new Point(12, 398);
+            linkLabelNoAccount.Name = "linkLabelNoAccount";
+            linkLabelNoAccount.Size = new Size(350, 20);
+            linkLabelNoAccount.TabIndex = 6;
+            linkLabelNoAccount.TabStop = true;
+            linkLabelNoAccount.Text = "Don't have an account? Create one by clicking here!";
+            linkLabelNoAccount.LinkClicked += LinkLabelNoAccount_LinkClicked;
+            // 
+            // menuStrip
+            // 
+            menuStrip.ImageScalingSize = new Size(20, 20);
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(521, 28);
+            menuStrip.TabIndex = 7;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { logOffToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // logOffToolStripMenuItem
+            // 
+            logOffToolStripMenuItem.Name = "logOffToolStripMenuItem";
+            logOffToolStripMenuItem.Size = new Size(224, 26);
+            logOffToolStripMenuItem.Text = "Log off";
+            logOffToolStripMenuItem.Click += LogOffToolStripMenuItem_Click;
             // 
             // OpeningForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(521, 390);
+            ClientSize = new Size(521, 431);
+            Controls.Add(linkLabelNoAccount);
+            Controls.Add(buttonLogIn);
+            Controls.Add(textBoxPassword);
+            Controls.Add(labelPassword);
             Controls.Add(textBoxUsername);
             Controls.Add(labelUsername);
             Controls.Add(buttonStartOnline);
             Controls.Add(buttonStart);
+            Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MainMenuStrip = menuStrip;
             Name = "OpeningForm";
             Text = "Chess";
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -97,5 +179,12 @@
         private Button buttonStartOnline;
         private Label labelUsername;
         private TextBox textBoxUsername;
+        private TextBox textBoxPassword;
+        private Label labelPassword;
+        private Button buttonLogIn;
+        private LinkLabel linkLabelNoAccount;
+        private MenuStrip menuStrip;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem logOffToolStripMenuItem;
     }
 }

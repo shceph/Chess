@@ -97,7 +97,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
             Name = "CheckRequestsForm";
-            Text = "Join Requests";
+            Text = "Join requests";
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);

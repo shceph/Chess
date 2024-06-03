@@ -18,6 +18,7 @@ namespace Chess
             InitializeComponent();
 
             Icon = new Icon(Globals.IconPath);
+            RefreshListBox();
         }
 
         private void RefreshListBox()
@@ -27,14 +28,21 @@ namespace Chess
 
             try
             {
+                if (Globals.Account == null)
+                {
+                    throw new Exception("You aren't logged in");
+                }
+
                 connection.Open();
 
                 string query = @"
-                    SELECT username FROM JoinRequests
-                    WHERE game_id = @game_id";
+                    SELECT username FROM Accounts
+                    JOIN JoinRequests ON (JoinRequests.requestor_id = Accounts.id)
+                    WHERE JoinRequests.game_id = (SELECT id FROM Games
+                    WHERE host_id = @current_account_id)";
 
                 using SqlCommand command = new(query, connection);
-                command.Parameters.AddWithValue("@game_id", HostGameForm.GameId);
+                command.Parameters.AddWithValue("@current_account_id", Globals.Account.Value.ID);
 
                 using SqlDataReader reader = command.ExecuteReader();
 
