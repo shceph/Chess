@@ -1,4 +1,6 @@
 using Microsoft.VisualBasic.Devices;
+using System.Data.SqlClient;
+using System.Drawing.Imaging;
 
 namespace Chess
 {
@@ -8,6 +10,9 @@ namespace Chess
         public static bool IsStalemate { get; set; }
         public static PieceColor WhoWon { get; set; }
 
+        private readonly bool isOnline;
+        private readonly PieceColor playersSide;  // Used only for online games
+
         private readonly Brush saddleBrownBrush;
         private readonly Brush sandyBrownBrush;
         private readonly Brush selectedBrush;
@@ -15,7 +20,8 @@ namespace Chess
         private readonly Point boardTopLeft;
         private readonly float boardSquareLenghtInPixels;
         private readonly Image[] pieceImages;
-        public MainForm()
+
+        public MainForm(bool isOnline = false, PieceColor playersSide = PieceColor.White, Guid? onlineGameID = null)
         {
             InitializeComponent();
 
@@ -24,6 +30,15 @@ namespace Chess
             IsCheckmate = false;
             IsStalemate = false;
             WhoWon = PieceColor.White;
+
+            this.isOnline = isOnline;
+            this.playersSide = playersSide;
+
+            if (isOnline)
+            {
+                Game.OnlineGameID = onlineGameID;
+                CheckIfPlayersTurn(true);
+            }
 
             saddleBrownBrush = new SolidBrush(Color.SaddleBrown);
             sandyBrownBrush = new SolidBrush(Color.SandyBrown);
@@ -122,7 +137,7 @@ namespace Chess
 
         private void HandleStalemate()
         {
-            MessageBox.Show("It's remi!\nClick OK to reset the game", "Remi");
+            MessageBox.Show("It's stalemate!\nClick OK to reset the game", "Remi");
             ResetGame();
         }
 
@@ -132,6 +147,65 @@ namespace Chess
             IsCheckmate = false;
             IsStalemate = false;
             Invalidate();
+        }
+
+        private void CheckIfPlayersTurn(bool calledFromConstructor = false)
+        {
+            using SqlConnection connection = new(Globals.ConnectionString);
+
+            try
+            {
+                if (Globals.Account == null)
+                {
+                    throw new Exception("You aren't logged in");
+                }
+
+                connection.Open();
+
+                string query = @"
+                    SELECT is_whites_turn, board FROM Games
+                    WHERE id = @id";
+
+                using SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@id", Game.OnlineGameID);
+
+                using SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    bool isWhitesTurn = reader.GetBoolean(0);
+
+                    if ((isWhitesTurn && playersSide == PieceColor.White) ||
+                        (!isWhitesTurn && playersSide == PieceColor.Black))
+                    {
+                        if (!calledFromConstructor)
+                        {
+                            Game.SwapTurn();
+                        }
+                        else
+                        {
+                            Game.WhoseTurn = playersSide;
+                        }
+
+                        Game.SetByBoardString(reader.GetString(1));
+                        timerCheckIfOpponentMadeMove.Enabled = false;
+                    }
+                    else
+                    {
+                        timerCheckIfOpponentMadeMove.Enabled = true;
+                    }
+                }
+                else
+                {
+                    throw new Exception("We can't find your game in our database");
+                }
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
@@ -161,11 +235,23 @@ namespace Chess
 
         private void MainForm_MouseClick(object sender, MouseEventArgs e)
         {
+            if (isOnline && playersSide != Game.WhoseTurn)
+            {
+                return;
+            }
+
             if (e.Button == MouseButtons.Right)
             {
-                if (Game.UnselectPiece())
+                try
                 {
-                    Invalidate();
+                    if (Game.UnselectPiece())
+                    {
+                        Invalidate();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
                 }
 
                 return;
@@ -183,9 +269,23 @@ namespace Chess
                 return;
             }
 
-            if (Game.SelectPieceOrMoveSelected(row, col))
+            try
             {
-                Invalidate();
+                if (Game.SelectPieceOrMoveSelected(row, col))
+                {
+                    Invalidate();
+
+                    if (isOnline && Game.BoardChanged)
+                    {
+                        Game.UpdateDataToDatabase();
+                        Game.BoardChanged = false;  // SelectPieceOrMoveSelected sets this to true if the board is changed
+                        timerCheckIfOpponentMadeMove.Enabled = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
             }
         }
 
@@ -197,6 +297,11 @@ namespace Chess
         private void ResetTheBoardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ResetGame();
+        }
+
+        private void TimerCheckIfOpponentMadeMove_Tick(object sender, EventArgs e)
+        {
+            CheckIfPlayersTurn();
         }
     }
 }

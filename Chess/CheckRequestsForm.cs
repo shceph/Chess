@@ -13,6 +13,8 @@ namespace Chess
 {
     public partial class CheckRequestsForm : Form
     {
+        private readonly List<Guid> ids = [];
+
         public CheckRequestsForm()
         {
             InitializeComponent();
@@ -23,7 +25,9 @@ namespace Chess
 
         private void RefreshListBox()
         {
+            ids.Clear();
             listBoxRequests.Items.Clear();
+
             using SqlConnection connection = new(Globals.ConnectionString);
 
             try
@@ -36,7 +40,7 @@ namespace Chess
                 connection.Open();
 
                 string query = @"
-                    SELECT username FROM Accounts
+                    SELECT JoinRequests.id, username FROM Accounts
                     JOIN JoinRequests ON (JoinRequests.requestor_id = Accounts.id)
                     WHERE JoinRequests.game_id = (SELECT id FROM Games
                     WHERE host_id = @current_account_id)";
@@ -50,7 +54,8 @@ namespace Chess
                 {
                     while (reader.Read())
                     {
-                        listBoxRequests.Items.Add(reader.GetString(0));
+                        ids.Add(reader.GetGuid(0));
+                        listBoxRequests.Items.Add(reader.GetString(1));
                     }
                 }
                 else
@@ -68,17 +73,56 @@ namespace Chess
 
         private void AcceptSelectedRequest()
         {
+            int selectedIndex = listBoxRequests.SelectedIndex;
 
+            if (selectedIndex == -1)
+            {
+                return;
+            }
+
+            using SqlConnection connection = new(Globals.ConnectionString);
+
+            try
+            {
+                if (Globals.Account == null)
+                {
+                    throw new Exception("You aren't logged in");
+                }
+
+                connection.Open();
+
+                string query = @"
+                    UPDATE JoinRequests
+                    SET accepted = 1
+                    WHERE id = @id";
+
+                using SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@id", ids[selectedIndex]);
+                command.ExecuteScalar();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+
+            MessageBox.Show("The request has been accepted successfully", "Request accepted");
+
+            Hide();
+            using MainForm mainForm = new(true, PieceColor.White, HostGameForm.GameID);
+            mainForm.ShowDialog();
+            Show();
         }
 
         private void ButtonAccept_Click(object sender, EventArgs e)
         {
-
+            AcceptSelectedRequest();
         }
 
         private void AcceptToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            AcceptSelectedRequest();
         }
 
         private void RefreshToolStripMenuItem1_Click(object sender, EventArgs e)

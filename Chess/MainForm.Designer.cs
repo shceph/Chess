@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             resetTheBoardToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             switchViewSideToolStripMenuItem = new ToolStripMenuItem();
+            timerCheckIfOpponentMadeMove = new System.Windows.Forms.Timer(components);
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -61,7 +63,7 @@
             // 
             resetTheBoardToolStripMenuItem.BackColor = SystemColors.Control;
             resetTheBoardToolStripMenuItem.Name = "resetTheBoardToolStripMenuItem";
-            resetTheBoardToolStripMenuItem.Size = new Size(224, 26);
+            resetTheBoardToolStripMenuItem.Size = new Size(197, 26);
             resetTheBoardToolStripMenuItem.Text = "Reset the board";
             resetTheBoardToolStripMenuItem.Click += ResetTheBoardToolStripMenuItem_Click;
             // 
@@ -69,7 +71,7 @@
             // 
             exitToolStripMenuItem.BackColor = SystemColors.Control;
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(224, 26);
+            exitToolStripMenuItem.Size = new Size(197, 26);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += ExitToolStripMenuItem_Click;
             // 
@@ -84,9 +86,14 @@
             // switchViewSideToolStripMenuItem
             // 
             switchViewSideToolStripMenuItem.Name = "switchViewSideToolStripMenuItem";
-            switchViewSideToolStripMenuItem.Size = new Size(224, 26);
+            switchViewSideToolStripMenuItem.Size = new Size(200, 26);
             switchViewSideToolStripMenuItem.Text = "Switch view side";
             switchViewSideToolStripMenuItem.Click += SwitchViewSideToolStripMenuItem_Click;
+            // 
+            // timerCheckIfOpponentMadeMove
+            // 
+            timerCheckIfOpponentMadeMove.Interval = 500;
+            timerCheckIfOpponentMadeMove.Tick += TimerCheckIfOpponentMadeMove_Tick;
             // 
             // MainForm
             // 
@@ -116,5 +123,6 @@
         private ToolStripMenuItem switchViewSideToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem resetTheBoardToolStripMenuItem;
+        private System.Windows.Forms.Timer timerCheckIfOpponentMadeMove;
     }
 }

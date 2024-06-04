@@ -40,9 +40,9 @@
             // listBoxRequests
             // 
             listBoxRequests.FormattingEnabled = true;
-            listBoxRequests.Location = new Point(12, 65);
+            listBoxRequests.Location = new Point(11, 80);
             listBoxRequests.Name = "listBoxRequests";
-            listBoxRequests.Size = new Size(412, 344);
+            listBoxRequests.Size = new Size(414, 344);
             listBoxRequests.TabIndex = 0;
             // 
             // menuStrip
@@ -51,7 +51,8 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(436, 28);
+            menuStrip.Padding = new Padding(6, 3, 0, 3);
+            menuStrip.Size = new Size(437, 30);
             menuStrip.TabIndex = 1;
             menuStrip.Text = "menuStrip";
             // 
@@ -78,7 +79,7 @@
             // 
             // buttonAccept
             // 
-            buttonAccept.Location = new Point(209, 31);
+            buttonAccept.Location = new Point(210, 45);
             buttonAccept.Name = "buttonAccept";
             buttonAccept.Size = new Size(215, 29);
             buttonAccept.TabIndex = 2;
@@ -90,7 +91,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(436, 422);
+            ClientSize = new Size(437, 436);
             Controls.Add(buttonAccept);
             Controls.Add(listBoxRequests);
             Controls.Add(menuStrip);

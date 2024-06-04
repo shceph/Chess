@@ -34,17 +34,13 @@ namespace Chess
             dataGridViewGames.DataSource = dataTable;
             dataGridViewGames.Columns[columnID].Visible = false;
 
-            dataGridViewGames.Columns[columnID].Width = 300;
+            dataGridViewGames.Columns[columnID].Width = 297;
             dataGridViewGames.Columns[columnUsername].Width = 150;
-            dataGridViewGames.Columns[columnDescription].Width = 500;
+            dataGridViewGames.Columns[columnDescription].Width =
+                dataGridViewGames.Width - dataGridViewGames.Columns[columnID].Width - dataGridViewGames.Columns[columnUsername].Width - 3;
 
             UpdateGamesTable();
             HostGameForm.IsHosted();
-        }
-
-        private void TimerUpdateGamesTable_Tick(object sender, EventArgs e)
-        {
-            //UpdateGamesTable();
         }
 
         private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
@@ -55,7 +51,6 @@ namespace Chess
         private void UpdateGamesTable()
         {
             int row_count = 0;
-
             dataTable.Rows.Clear();
 
             using SqlConnection connection = new(Globals.ConnectionString);
@@ -104,8 +99,14 @@ namespace Chess
             labelGameCount.Text = "Game count: " + row_count;
         }
 
-        private void Join()
+        private void SendRequest()
         {
+            if (HostGameForm.GameID != null)
+            {
+                MessageBox.Show("You can't join other games while you are hosting one.", "Can't join", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             if (dataGridViewGames.SelectedRows.Count != 1)
             {
                 return;
@@ -181,12 +182,12 @@ namespace Chess
 
         private void ButtonJoin_Click(object sender, EventArgs e)
         {
-            Join();
+            SendRequest();
         }
 
         private void JoinToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Join();
+            SendRequest();
         }
 
         private void ButtonCheckRequests_Click(object sender, EventArgs e)
@@ -199,6 +200,12 @@ namespace Chess
 
             using CheckRequestsForm crf = new();
             crf.ShowDialog();
+        }
+
+        private void ButtonAcceptedRequests_Click(object sender, EventArgs e)
+        {
+            using AcceptedRequestsForm acceptedRequestsForm = new();
+            acceptedRequestsForm.ShowDialog();
         }
     }
 }

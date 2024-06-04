@@ -13,14 +13,13 @@ namespace Chess
 {
     public partial class OpeningForm : Form
     {
-
         public OpeningForm()
         {
             InitializeComponent();
             Icon = new Icon(Globals.IconPath);
         }
 
-        private void ButtonStart_Click(object sender, EventArgs e)
+        private void Start()
         {
             using MainForm mainForm = new();
             Hide();
@@ -28,7 +27,7 @@ namespace Chess
             Show();
         }
 
-        private void ButtonStartOnline_Click(object sender, EventArgs e)
+        private void OnlineGames()
         {
             if (Globals.Account == null)
             {
@@ -40,7 +39,25 @@ namespace Chess
             ogf.ShowDialog();
         }
 
-        private void ButtonLogIn_Click(object sender, EventArgs e)
+        private void CreateAccount()
+        {
+            using CreateAccountForm caf = new();
+            caf.ShowDialog();
+        }
+
+        private void LogOff()
+        {
+            if (Globals.Account != null)
+            {
+                MessageBox.Show("You aren't logged in");
+                return;
+            }
+
+            Globals.SetAccountToNull();
+            MessageBox.Show("Succesfuly logged out");
+        }
+
+        private void LogIn()
         {
             string username = textBoxUsername.Text;
             string password = textBoxPassword.Text;
@@ -61,7 +78,6 @@ namespace Chess
                     WHERE username = @username AND password = @password";
 
                 using SqlCommand command = new(query, connection);
-
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
 
@@ -71,7 +87,9 @@ namespace Chess
                 {
                     reader.Read();
                     Globals.Account = new(reader.GetGuid(0), username, password);
-                    MessageBox.Show("You logged in succesfuly", "Logged in");
+                    MessageBox.Show("You have logged in succesfuly", "Logged in");
+                    textBoxUsername.Text = string.Empty;
+                    textBoxPassword.Text = string.Empty;
                 }
                 else
                 {
@@ -84,27 +102,51 @@ namespace Chess
             {
                 MessageBox.Show(ex.Message, "Error");
             }
+        }
 
-            textBoxUsername.Text = string.Empty;
-            textBoxPassword.Text = string.Empty;
+        private void OpeningForm_Activated(object sender, EventArgs e)
+        {
+            textBoxUsername.Focus();
+        }
+
+        private void ButtonStart_Click(object sender, EventArgs e)
+        {
+            Start();
+        }
+
+        private void ButtonStartOnline_Click(object sender, EventArgs e)
+        {
+            OnlineGames();
+        }
+
+        private void ButtonLogIn_Click(object sender, EventArgs e)
+        {
+            LogIn();
         }
 
         private void LinkLabelNoAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            using CreateAccountForm caf = new();
-            caf.ShowDialog();
+            CreateAccount();
+        }
+
+        private void StartLocallyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Start();
+        }
+
+        private void FindOnlineGamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OnlineGames();
+        }
+
+        private void LogInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LogIn();
         }
 
         private void LogOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Globals.Account != null)
-            {
-                MessageBox.Show("You aren't logged in");
-                return;
-            }
-
-            Globals.SetAccountToNull();
-            MessageBox.Show("Succesfuly logged out");
+            LogOff();
         }
     }
 }

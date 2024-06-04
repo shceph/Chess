@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -191,14 +192,48 @@ namespace Chess
 
         private static BoardIndex selectedPiece = new();
         public static BoardIndex SelectedPiece { get { return selectedPiece; } }
+        public static bool BoardChanged { get; set; } = false;
 
         //private static PieceColor whoseTurn = PieceColor.White;
-        public static PieceColor WhoseTurn { get; set; }
+        public static PieceColor WhoseTurn { get; set; } = PieceColor.White;
+        public static Guid? OnlineGameID { get; set; } = null;
 
         static Game()
         {
             board = new Piece[BoardLenght, BoardLenght];
             Reset();
+        }
+
+        public static void UpdateDataToDatabase()
+        {
+            using SqlConnection connection = new(Globals.ConnectionString);
+
+            try
+            {
+                if (Globals.Account == null)
+                {
+                    throw new Exception("You aren't logged in");
+                }
+
+                connection.Open();
+
+                string query = @"
+                    UPDATE Games
+                    SET is_whites_turn = @is_whites_turn, board = @board_string
+                    WHERE id = @id";
+
+                using SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@is_whites_turn", WhoseTurn == PieceColor.White);
+                command.Parameters.AddWithValue("@board_string", GetBoardString(board));
+                command.Parameters.AddWithValue("@id", OnlineGameID);
+                command.ExecuteScalar();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
 
         public static void SwapTurn()
@@ -227,6 +262,30 @@ namespace Chess
             WhoseTurn = PieceColor.White;
         }
 
+        public static void SetByBoardString(string boardString)
+        {
+            for (int i = 0; i < boardString.Length; i++)
+            {
+                board[i / 8, i % 8] = boardString[i] switch
+                {
+                    'P' => Piece.WhitePawn,
+                    'p' => Piece.BlackPawn,
+                    'N' => Piece.WhiteKnight,
+                    'n' => Piece.BlackKnight,
+                    'B' => Piece.WhiteBishop,
+                    'b' => Piece.BlackBishop,
+                    'R' => Piece.WhiteRook,
+                    'r' => Piece.BlackRook,
+                    'Q' => Piece.WhiteQueen,
+                    'q' => Piece.BlackQueen,
+                    'K' => Piece.WhiteKing,
+                    'k' => Piece.BlackKing,
+                    '-' => Piece.None,
+                    _ => throw new Exception("boadrdString in incorrect format")
+                };
+            }
+        }
+
         public static string GetBoardString(Piece[,] boardToUse)
         {
             string ret = "";
@@ -240,9 +299,9 @@ namespace Chess
                     case Piece.BlackPawn:
                         ret += 'p'; break;
                     case Piece.WhiteKnight:
-                        ret += 'K'; break;
+                        ret += 'N'; break;
                     case Piece.BlackKnight:
-                        ret += 'k'; break;
+                        ret += 'n'; break;
                     case Piece.WhiteBishop:
                         ret += 'B'; break;
                     case Piece.BlackBishop:
@@ -369,6 +428,7 @@ namespace Chess
                         }
                     }
 
+                    BoardChanged = true;
                     SwapTurn();
                     selectedPiece.Unselect();
                     return true;

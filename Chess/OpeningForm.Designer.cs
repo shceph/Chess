@@ -38,6 +38,9 @@
             linkLabelNoAccount = new LinkLabel();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            startLocallyToolStripMenuItem = new ToolStripMenuItem();
+            findOnlineGamesToolStripMenuItem = new ToolStripMenuItem();
+            logInToolStripMenuItem = new ToolStripMenuItem();
             logOffToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -45,7 +48,7 @@
             // buttonStart
             // 
             buttonStart.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStart.Location = new Point(12, 48);
+            buttonStart.Location = new Point(11, 48);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(497, 69);
             buttonStart.TabIndex = 0;
@@ -56,7 +59,7 @@
             // buttonStartOnline
             // 
             buttonStartOnline.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStartOnline.Location = new Point(12, 123);
+            buttonStartOnline.Location = new Point(11, 123);
             buttonStartOnline.Name = "buttonStartOnline";
             buttonStartOnline.Size = new Size(497, 69);
             buttonStartOnline.TabIndex = 0;
@@ -68,7 +71,7 @@
             // 
             labelUsername.AutoSize = true;
             labelUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelUsername.Location = new Point(12, 236);
+            labelUsername.Location = new Point(11, 236);
             labelUsername.Name = "labelUsername";
             labelUsername.Size = new Size(198, 20);
             labelUsername.TabIndex = 1;
@@ -77,7 +80,7 @@
             // textBoxUsername
             // 
             textBoxUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBoxUsername.Location = new Point(12, 273);
+            textBoxUsername.Location = new Point(11, 273);
             textBoxUsername.MaxLength = 20;
             textBoxUsername.Name = "textBoxUsername";
             textBoxUsername.Size = new Size(237, 25);
@@ -89,9 +92,9 @@
             textBoxPassword.Location = new Point(272, 273);
             textBoxPassword.MaxLength = 20;
             textBoxPassword.Name = "textBoxPassword";
-            textBoxPassword.PasswordChar = '*';
             textBoxPassword.Size = new Size(237, 25);
             textBoxPassword.TabIndex = 4;
+            textBoxPassword.UseSystemPasswordChar = true;
             // 
             // labelPassword
             // 
@@ -106,9 +109,9 @@
             // buttonLogIn
             // 
             buttonLogIn.Font = new Font("Cascadia Mono", 9F);
-            buttonLogIn.Location = new Point(199, 325);
+            buttonLogIn.Location = new Point(199, 335);
             buttonLogIn.Name = "buttonLogIn";
-            buttonLogIn.Size = new Size(127, 29);
+            buttonLogIn.Size = new Size(127, 37);
             buttonLogIn.TabIndex = 5;
             buttonLogIn.Text = "Log in";
             buttonLogIn.UseVisualStyleBackColor = true;
@@ -117,7 +120,7 @@
             // linkLabelNoAccount
             // 
             linkLabelNoAccount.AutoSize = true;
-            linkLabelNoAccount.Location = new Point(12, 398);
+            linkLabelNoAccount.Location = new Point(11, 397);
             linkLabelNoAccount.Name = "linkLabelNoAccount";
             linkLabelNoAccount.Size = new Size(350, 20);
             linkLabelNoAccount.TabIndex = 6;
@@ -131,16 +134,38 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(521, 28);
+            menuStrip.Padding = new Padding(6, 3, 0, 3);
+            menuStrip.Size = new Size(521, 30);
             menuStrip.TabIndex = 7;
             menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { logOffToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { startLocallyToolStripMenuItem, findOnlineGamesToolStripMenuItem, logInToolStripMenuItem, logOffToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
+            // 
+            // startLocallyToolStripMenuItem
+            // 
+            startLocallyToolStripMenuItem.Name = "startLocallyToolStripMenuItem";
+            startLocallyToolStripMenuItem.Size = new Size(224, 26);
+            startLocallyToolStripMenuItem.Text = "Start locally";
+            startLocallyToolStripMenuItem.Click += StartLocallyToolStripMenuItem_Click;
+            // 
+            // findOnlineGamesToolStripMenuItem
+            // 
+            findOnlineGamesToolStripMenuItem.Name = "findOnlineGamesToolStripMenuItem";
+            findOnlineGamesToolStripMenuItem.Size = new Size(224, 26);
+            findOnlineGamesToolStripMenuItem.Text = "Find online games";
+            findOnlineGamesToolStripMenuItem.Click += FindOnlineGamesToolStripMenuItem_Click;
+            // 
+            // logInToolStripMenuItem
+            // 
+            logInToolStripMenuItem.Name = "logInToolStripMenuItem";
+            logInToolStripMenuItem.Size = new Size(224, 26);
+            logInToolStripMenuItem.Text = "Log in";
+            logInToolStripMenuItem.Click += LogInToolStripMenuItem_Click;
             // 
             // logOffToolStripMenuItem
             // 
@@ -151,6 +176,7 @@
             // 
             // OpeningForm
             // 
+            AcceptButton = buttonLogIn;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(521, 431);
@@ -167,6 +193,7 @@
             MainMenuStrip = menuStrip;
             Name = "OpeningForm";
             Text = "Chess";
+            Activated += OpeningForm_Activated;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             ResumeLayout(false);
@@ -186,5 +213,8 @@
         private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem logOffToolStripMenuItem;
+        private ToolStripMenuItem startLocallyToolStripMenuItem;
+        private ToolStripMenuItem findOnlineGamesToolStripMenuItem;
+        private ToolStripMenuItem logInToolStripMenuItem;
     }
 }

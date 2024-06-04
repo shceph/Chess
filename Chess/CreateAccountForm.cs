@@ -26,6 +26,12 @@ namespace Chess
             string username = textBoxUsername.Text;
             string password = textBoxPassword.Text;
 
+            if (password != textBoxConfirm.Text)
+            {
+                MessageBox.Show("Original and the confirm password must be the same", "Error");
+                return;
+            }
+
             if (!Account.UsernameAndPasswordAreValid(username, password))
             {
                 return;
@@ -37,14 +43,13 @@ namespace Chess
             {
                 connection.Open();
 
-                string getAccountsQuery = @"
+                string query = @"
                     SELECT username FROM Accounts
                     WHERE username = @username";
 
-                using SqlCommand getAccoutnsCommand = new(getAccountsQuery, connection);
-
-                getAccoutnsCommand.Parameters.AddWithValue("@username", username);
-                string? query_output = (string?)getAccoutnsCommand.ExecuteScalar();
+                using SqlCommand command = new(query, connection);
+                command.Parameters.AddWithValue("@username", username);
+                object? query_output = command.ExecuteScalar();
 
                 if (query_output != null)
                 {
@@ -53,14 +58,12 @@ namespace Chess
                     return;
                 }
 
-                string query = @"
+                query = @"
                     INSERT INTO Accounts (id, username, password)
                     OUTPUT INSERTED.id
                     VALUES (NEWID(), @username, @password)";
 
-                using SqlCommand command = new(query, connection);
-
-                command.Parameters.AddWithValue("@username", username);
+                command.CommandText = query;
                 command.Parameters.AddWithValue("@password", password);
 
                 id = (Guid)command.ExecuteScalar();

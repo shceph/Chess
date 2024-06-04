@@ -41,6 +41,7 @@
             buttonJoin = new Button();
             labelGameCount = new Label();
             buttonCheckRequests = new Button();
+            buttonAcceptedRequests = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewGames).BeginInit();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -49,7 +50,6 @@
             // 
             timerUpdateGamesTable.Enabled = true;
             timerUpdateGamesTable.Interval = 5000;
-            timerUpdateGamesTable.Tick += TimerUpdateGamesTable_Tick;
             // 
             // dataGridViewGames
             // 
@@ -66,7 +66,7 @@
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
             dataGridViewGames.DefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewGames.Location = new Point(12, 66);
+            dataGridViewGames.Location = new Point(12, 76);
             dataGridViewGames.MultiSelect = false;
             dataGridViewGames.Name = "dataGridViewGames";
             dataGridViewGames.ReadOnly = true;
@@ -76,7 +76,7 @@
             dataGridViewGames.RowTemplate.Height = 23;
             dataGridViewGames.RowTemplate.ReadOnly = true;
             dataGridViewGames.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewGames.Size = new Size(953, 415);
+            dataGridViewGames.Size = new Size(914, 415);
             dataGridViewGames.TabIndex = 1;
             // 
             // menuStrip
@@ -85,7 +85,8 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, refreshToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(977, 28);
+            menuStrip.Padding = new Padding(6, 3, 0, 3);
+            menuStrip.Size = new Size(938, 30);
             menuStrip.TabIndex = 2;
             menuStrip.Text = "menuStrip1";
             // 
@@ -119,7 +120,7 @@
             // 
             // buttonHost
             // 
-            buttonHost.Location = new Point(700, 31);
+            buttonHost.Location = new Point(457, 41);
             buttonHost.Name = "buttonHost";
             buttonHost.Size = new Size(94, 29);
             buttonHost.TabIndex = 3;
@@ -129,7 +130,7 @@
             // 
             // buttonJoin
             // 
-            buttonJoin.Location = new Point(600, 31);
+            buttonJoin.Location = new Point(357, 41);
             buttonJoin.Name = "buttonJoin";
             buttonJoin.Size = new Size(94, 29);
             buttonJoin.TabIndex = 3;
@@ -140,7 +141,7 @@
             // labelGameCount
             // 
             labelGameCount.AutoSize = true;
-            labelGameCount.Location = new Point(12, 35);
+            labelGameCount.Location = new Point(12, 44);
             labelGameCount.Name = "labelGameCount";
             labelGameCount.Size = new Size(104, 20);
             labelGameCount.TabIndex = 4;
@@ -148,7 +149,7 @@
             // 
             // buttonCheckRequests
             // 
-            buttonCheckRequests.Location = new Point(800, 31);
+            buttonCheckRequests.Location = new Point(557, 41);
             buttonCheckRequests.Name = "buttonCheckRequests";
             buttonCheckRequests.Size = new Size(165, 29);
             buttonCheckRequests.TabIndex = 3;
@@ -156,11 +157,22 @@
             buttonCheckRequests.UseVisualStyleBackColor = true;
             buttonCheckRequests.Click += ButtonCheckRequests_Click;
             // 
+            // buttonAcceptedRequests
+            // 
+            buttonAcceptedRequests.Location = new Point(728, 41);
+            buttonAcceptedRequests.Name = "buttonAcceptedRequests";
+            buttonAcceptedRequests.Size = new Size(198, 29);
+            buttonAcceptedRequests.TabIndex = 5;
+            buttonAcceptedRequests.Text = "Check accepted requests";
+            buttonAcceptedRequests.UseVisualStyleBackColor = true;
+            buttonAcceptedRequests.Click += ButtonAcceptedRequests_Click;
+            // 
             // OnlineGamesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(977, 493);
+            ClientSize = new Size(938, 503);
+            Controls.Add(buttonAcceptedRequests);
             Controls.Add(labelGameCount);
             Controls.Add(buttonJoin);
             Controls.Add(buttonCheckRequests);
@@ -190,5 +202,6 @@
         private Button buttonJoin;
         private Label labelGameCount;
         private Button buttonCheckRequests;
+        private Button buttonAcceptedRequests;
     }
 }
