@@ -368,6 +368,7 @@ namespace Chess
                 throw new ArgumentOutOfRangeException(nameof(col));
             }
 
+            // If the view is from white player's perspective, the indices of pieces are inverted, so we're returning them to normal
             if (View == View.WhitePOV)
             {
                 row = BoardLenght - 1 - row;
@@ -377,9 +378,10 @@ namespace Chess
             // If a piece is selected, an attemp to move that piece was made, so we're checking if that's possible
             if (selectedPiece.IsSelected())
             {
+                BoardIndex squareToMoveTo = new(row, col);
                 List<BoardIndex> availableMoves = GetAvailableMoves(selectedPiece, board);
 
-                if (availableMoves.Contains(new(row, col)))
+                if (availableMoves.Contains(squareToMoveTo))
                 {
                     int selectedRow = selectedPiece.Row;
                     int selectedCol = selectedPiece.Col;
@@ -433,7 +435,7 @@ namespace Chess
                     selectedPiece.Unselect();
                     return true;
                 }
-                else  // if (availableMoves.Contains(new(row, col)))
+                else  // if (availableMoves.Contains(squareToMoveTo))
                 {
                     if (board[row, col] == Piece.None || (RespectMoveRights && board[row, col].GetColor() != WhoseTurn))
                     {
@@ -450,7 +452,9 @@ namespace Chess
             else  // if (selectedPiece.IsSelected())
             {
                 if (board[row, col] == Piece.None || (RespectMoveRights && board[row, col].GetColor() != WhoseTurn))
+                {
                     return false;
+                }
 
                 selectedPiece.Select(row, col);
                 return true;
@@ -524,9 +528,9 @@ namespace Chess
                     // Checks if the pieces of the opposite color can attack the king
                     if (boardToUse[i, j].GetColor() == oppositeColor)
                     {
-                        List<BoardIndex> blackPieceAvailableSquares = GetAvailableMoves(new(i, j), boardToUse);
+                        List<BoardIndex> pieceAvailableSquares = GetAvailableMoves(new(i, j), boardToUse);
 
-                        if (blackPieceAvailableSquares.Contains(kingIndex))
+                        if (pieceAvailableSquares.Contains(kingIndex))
                         {
                             return true;
                         }
@@ -598,7 +602,7 @@ namespace Chess
         {
             List<BoardIndex> availableMoves = [];
 
-            // The return value is used in loops for pieces like bishop, rook and queen. If the return value is false,
+            // The return value is used in loops for pieces that can move further than one square. If the return value is false,
             // it means the piece can't go further in the direction you are checking and the loop breaks (see below)
             bool checkSquare(int row, int col)
             {
@@ -637,12 +641,14 @@ namespace Chess
                         availableMoves.Add(new(piece.Row + 2, piece.Col));
                     }
 
-                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row + 1, piece.Col + 1].IsBlack())
+                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('H') &&
+                        boardToUse[piece.Row + 1, piece.Col + 1].IsBlack())
                     {
                         availableMoves.Add(new(piece.Row + 1, piece.Col + 1));
                     }
 
-                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row + 1, piece.Col - 1].IsBlack())
+                    if (piece.Row != RowNumToArrayIndex(8) && piece.Col != ColumnMarkToArrayIndex('A') &&
+                        boardToUse[piece.Row + 1, piece.Col - 1].IsBlack())
                     {
                         availableMoves.Add(new(piece.Row + 1, piece.Col - 1));
                     }
@@ -660,12 +666,14 @@ namespace Chess
                         availableMoves.Add(new(piece.Row - 2, piece.Col));
                     }
 
-                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('H') && boardToUse[piece.Row - 1, piece.Col + 1].IsWhite())
+                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('H') &&
+                        boardToUse[piece.Row - 1, piece.Col + 1].IsWhite())
                     {
                         availableMoves.Add(new(piece.Row - 1, piece.Col + 1));
                     }
 
-                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('A') && boardToUse[piece.Row - 1, piece.Col - 1].IsWhite())
+                    if (piece.Row != RowNumToArrayIndex(1) && piece.Col != ColumnMarkToArrayIndex('A') &&
+                        boardToUse[piece.Row - 1, piece.Col - 1].IsWhite())
                     {
                         availableMoves.Add(new(piece.Row - 1, piece.Col - 1));
                     }

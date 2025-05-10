@@ -89,9 +89,6 @@ namespace Chess
                 }
             }
 
-            BoardIndex bi = new(0, 0);
-            bi.SwapForPOV();
-
             for (int i = 0; i < Game.BoardLenght; i++)
             {
                 for (int j = 0; j < Game.BoardLenght; j++)
@@ -189,6 +186,7 @@ namespace Chess
 
                         Game.SetByBoardString(reader.GetString(1));
                         timerCheckIfOpponentMadeMove.Enabled = false;
+                        Invalidate();
                     }
                     else
                     {
@@ -213,8 +211,6 @@ namespace Chess
             e.Graphics.TranslateTransform(0, menuStrip.Height);
             DrawBoard(e.Graphics);
 
-            e.Dispose();
-
             if (IsCheckmate)
             {
                 HandleCheckmate();
@@ -223,6 +219,8 @@ namespace Chess
             {
                 HandleStalemate();
             }
+
+            e.Dispose();
         }
 
         private void SwitchViewSideToolStripMenuItem_Click(object sender, EventArgs e)

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             timerUpdateGamesTable = new System.Windows.Forms.Timer(components);
             dataGridViewGames = new DataGridView();
             menuStrip = new MenuStrip();
@@ -42,6 +42,8 @@
             labelGameCount = new Label();
             buttonCheckRequests = new Button();
             buttonAcceptedRequests = new Button();
+            checkReToolStripMenuItem = new ToolStripMenuItem();
+            checkAcceptedRequestsToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridViewGames).BeginInit();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -58,14 +60,14 @@
             dataGridViewGames.AllowUserToResizeColumns = false;
             dataGridViewGames.AllowUserToResizeRows = false;
             dataGridViewGames.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 8.4F);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            dataGridViewGames.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Window;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 8.4F);
+            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dataGridViewGames.DefaultCellStyle = dataGridViewCellStyle4;
             dataGridViewGames.Location = new Point(12, 76);
             dataGridViewGames.MultiSelect = false;
             dataGridViewGames.Name = "dataGridViewGames";
@@ -92,7 +94,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { hostAGameToolStripMenuItem, joinToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { hostAGameToolStripMenuItem, joinToolStripMenuItem, checkReToolStripMenuItem, checkAcceptedRequestsToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
@@ -100,14 +102,14 @@
             // hostAGameToolStripMenuItem
             // 
             hostAGameToolStripMenuItem.Name = "hostAGameToolStripMenuItem";
-            hostAGameToolStripMenuItem.Size = new Size(123, 26);
+            hostAGameToolStripMenuItem.Size = new Size(224, 26);
             hostAGameToolStripMenuItem.Text = "Host";
             hostAGameToolStripMenuItem.Click += HostToolStripMenuItem_Click;
             // 
             // joinToolStripMenuItem
             // 
             joinToolStripMenuItem.Name = "joinToolStripMenuItem";
-            joinToolStripMenuItem.Size = new Size(123, 26);
+            joinToolStripMenuItem.Size = new Size(224, 26);
             joinToolStripMenuItem.Text = "Join";
             joinToolStripMenuItem.Click += JoinToolStripMenuItem_Click;
             // 
@@ -167,6 +169,20 @@
             buttonAcceptedRequests.UseVisualStyleBackColor = true;
             buttonAcceptedRequests.Click += ButtonAcceptedRequests_Click;
             // 
+            // checkReToolStripMenuItem
+            // 
+            checkReToolStripMenuItem.Name = "checkReToolStripMenuItem";
+            checkReToolStripMenuItem.Size = new Size(255, 26);
+            checkReToolStripMenuItem.Text = "Check requests";
+            checkReToolStripMenuItem.Click += CheckRequestsToolStripMenuItem_Click;
+            // 
+            // checkAcceptedRequestsToolStripMenuItem
+            // 
+            checkAcceptedRequestsToolStripMenuItem.Name = "checkAcceptedRequestsToolStripMenuItem";
+            checkAcceptedRequestsToolStripMenuItem.Size = new Size(255, 26);
+            checkAcceptedRequestsToolStripMenuItem.Text = "Check accepted requests";
+            checkAcceptedRequestsToolStripMenuItem.Click += CheckAcceptedRequestsToolStripMenuItem_Click;
+            // 
             // OnlineGamesForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -181,6 +197,7 @@
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
+            MaximizeBox = false;
             Name = "OnlineGamesForm";
             Text = "Available games";
             ((System.ComponentModel.ISupportInitialize)dataGridViewGames).EndInit();
@@ -203,5 +220,7 @@
         private Label labelGameCount;
         private Button buttonCheckRequests;
         private Button buttonAcceptedRequests;
+        private ToolStripMenuItem checkReToolStripMenuItem;
+        private ToolStripMenuItem checkAcceptedRequestsToolStripMenuItem;
     }
 }

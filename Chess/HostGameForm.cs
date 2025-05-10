@@ -66,7 +66,7 @@ namespace Chess
         {
             if (GameID != null)
             {
-                MessageBox.Show("You have already hosted the game", "Can't host");
+                MessageBox.Show("You have already hosted a game", "Can't host");
                 return;
             }
 

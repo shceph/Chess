@@ -128,6 +128,7 @@
             Controls.Add(labelAllowedPlayer);
             Controls.Add(textBoxAllowedPlayer);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "HostGameForm";
             Text = "Host your game";
             ResumeLayout(false);

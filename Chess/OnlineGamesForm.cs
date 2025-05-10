@@ -33,7 +33,6 @@ namespace Chess
 
             dataGridViewGames.DataSource = dataTable;
             dataGridViewGames.Columns[columnID].Visible = false;
-
             dataGridViewGames.Columns[columnID].Width = 297;
             dataGridViewGames.Columns[columnUsername].Width = 150;
             dataGridViewGames.Columns[columnDescription].Width =
@@ -157,6 +156,24 @@ namespace Chess
             }
         }
 
+        private void CheckRequests()
+        {
+            if (HostGameForm.GameID is null)
+            {
+                MessageBox.Show("You haven't hosted a game", "Host a game");
+                return;
+            }
+
+            using CheckRequestsForm crf = new();
+            crf.ShowDialog();
+        }
+
+        private void CheckAcceptedRequests()
+        {
+            using AcceptedRequestsForm acceptedRequestsForm = new();
+            acceptedRequestsForm.ShowDialog();
+        }
+
         private void Host()
         {
             if (HostGameForm.GameID != null)
@@ -192,20 +209,22 @@ namespace Chess
 
         private void ButtonCheckRequests_Click(object sender, EventArgs e)
         {
-            if (HostGameForm.GameID is null)
-            {
-                MessageBox.Show("You haven't hosted a game", "Host a game");
-                return;
-            }
-
-            using CheckRequestsForm crf = new();
-            crf.ShowDialog();
+            CheckRequests();
         }
 
         private void ButtonAcceptedRequests_Click(object sender, EventArgs e)
         {
-            using AcceptedRequestsForm acceptedRequestsForm = new();
-            acceptedRequestsForm.ShowDialog();
+            CheckAcceptedRequests();
+        }
+
+        private void CheckRequestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CheckRequests();
+        }
+
+        private void CheckAcceptedRequestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CheckAcceptedRequests();
         }
     }
 }

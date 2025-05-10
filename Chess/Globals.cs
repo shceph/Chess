@@ -31,6 +31,18 @@ namespace Chess
                 return false;
             }
 
+            if (username.Length < 6)
+            {
+                MessageBox.Show("Your username must be at least 6 characters long", "Invalid username");
+                return false;
+            }
+            
+            if (password.Length < 6)
+            {
+                MessageBox.Show("Your password must be at least 6 characters long", "Invalid password");
+                return false;
+            }
+
             return true;
         }
     }
@@ -51,7 +63,7 @@ namespace Chess
         {
             try
             {
-                connectionString = File.ReadAllText(ConnectionStringFilePath);
+                connectionString = File.ReadAllLines(ConnectionStringFilePath)[0];
             }
             catch
             {
@@ -63,12 +75,5 @@ namespace Chess
         {
             account = null;
         }
-
-        //public static bool SetAccount(Guid id, string username, string password)
-        //{
-        //    account = new Account(id, username, password);
-
-        //    return false;
-        //}
     }
 }

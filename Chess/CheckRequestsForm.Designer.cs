@@ -32,7 +32,7 @@
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             acceptToolStripMenuItem = new ToolStripMenuItem();
-            refreshToolStripMenuItem1 = new ToolStripMenuItem();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
             buttonAccept = new Button();
             menuStrip.SuspendLayout();
             SuspendLayout();
@@ -48,7 +48,7 @@
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(20, 20);
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, refreshToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(6, 3, 0, 3);
@@ -58,7 +58,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { acceptToolStripMenuItem, refreshToolStripMenuItem1 });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { acceptToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(46, 24);
             fileToolStripMenuItem.Text = "File";
@@ -66,16 +66,16 @@
             // acceptToolStripMenuItem
             // 
             acceptToolStripMenuItem.Name = "acceptToolStripMenuItem";
-            acceptToolStripMenuItem.Size = new Size(141, 26);
+            acceptToolStripMenuItem.Size = new Size(224, 26);
             acceptToolStripMenuItem.Text = "Accept";
             acceptToolStripMenuItem.Click += AcceptToolStripMenuItem_Click;
             // 
-            // refreshToolStripMenuItem1
+            // refreshToolStripMenuItem
             // 
-            refreshToolStripMenuItem1.Name = "refreshToolStripMenuItem1";
-            refreshToolStripMenuItem1.Size = new Size(141, 26);
-            refreshToolStripMenuItem1.Text = "Refresh";
-            refreshToolStripMenuItem1.Click += RefreshToolStripMenuItem1_Click;
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new Size(72, 24);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
             // 
             // buttonAccept
             // 
@@ -97,6 +97,7 @@
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
+            MinimizeBox = false;
             Name = "CheckRequestsForm";
             Text = "Join requests";
             menuStrip.ResumeLayout(false);
@@ -111,7 +112,7 @@
         private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem acceptToolStripMenuItem;
-        private ToolStripMenuItem refreshToolStripMenuItem1;
         private Button buttonAccept;
+        private ToolStripMenuItem refreshToolStripMenuItem;
     }
 }

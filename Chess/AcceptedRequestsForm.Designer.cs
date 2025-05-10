@@ -30,6 +30,11 @@
         {
             listBoxAcceptedRequests = new ListBox();
             buttonEnterGame = new Button();
+            menuStrip = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            enterTheGameToolStripMenuItem = new ToolStripMenuItem();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // listBoxAcceptedRequests
@@ -50,6 +55,37 @@
             buttonEnterGame.UseVisualStyleBackColor = true;
             buttonEnterGame.Click += ButtonEnterGame_Click;
             // 
+            // menuStrip
+            // 
+            menuStrip.ImageScalingSize = new Size(20, 20);
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, refreshToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(437, 28);
+            menuStrip.TabIndex = 3;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { enterTheGameToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // enterTheGameToolStripMenuItem
+            // 
+            enterTheGameToolStripMenuItem.Name = "enterTheGameToolStripMenuItem";
+            enterTheGameToolStripMenuItem.Size = new Size(224, 26);
+            enterTheGameToolStripMenuItem.Text = "Enter the game";
+            enterTheGameToolStripMenuItem.Click += EnterTheGameToolStripMenuItem_Click;
+            // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new Size(72, 24);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += RefreshToolStripMenuItem_Click;
+            // 
             // AcceptedRequestsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -57,14 +93,25 @@
             ClientSize = new Size(437, 436);
             Controls.Add(buttonEnterGame);
             Controls.Add(listBoxAcceptedRequests);
+            Controls.Add(menuStrip);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MainMenuStrip = menuStrip;
+            MaximizeBox = false;
             Name = "AcceptedRequestsForm";
-            Text = "AcceptedRequestsForm";
+            Text = "Accepted requests";
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private ListBox listBoxAcceptedRequests;
         private Button buttonEnterGame;
+        private MenuStrip menuStrip;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem enterTheGameToolStripMenuItem;
+        private ToolStripMenuItem refreshToolStripMenuItem;
     }
 }

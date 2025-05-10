@@ -18,22 +18,8 @@ namespace Chess
         public AcceptedRequestsForm()
         {
             InitializeComponent();
+            Icon = new Icon(Globals.IconPath);
             RefreshListBox();
-        }
-
-        private void ButtonEnterGame_Click(object sender, EventArgs e)
-        {
-            int selectedIndex = listBoxAcceptedRequests.SelectedIndex;
-
-            if (selectedIndex == -1)
-            {
-                return;
-            }
-
-            Hide();
-            using MainForm mainForm = new(true, PieceColor.Black, ids[selectedIndex]);
-            mainForm.ShowDialog();
-            Show();
         }
 
         private void RefreshListBox()
@@ -83,6 +69,36 @@ namespace Chess
             {
                 MessageBox.Show(ex.Message, "Error");
             }
+        }
+
+        private void EnterSelectedGame()
+        {
+            int selectedIndex = listBoxAcceptedRequests.SelectedIndex;
+
+            if (selectedIndex == -1)
+            {
+                return;
+            }
+
+            Hide();
+            using MainForm mainForm = new(true, PieceColor.Black, ids[selectedIndex]);
+            mainForm.ShowDialog();
+            Show();
+        }
+
+        private void ButtonEnterGame_Click(object sender, EventArgs e)
+        {
+            EnterSelectedGame();
+        }
+
+        private void EnterTheGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnterSelectedGame();
+        }
+
+        private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RefreshListBox();
         }
     }
 }

@@ -149,28 +149,28 @@
             // startLocallyToolStripMenuItem
             // 
             startLocallyToolStripMenuItem.Name = "startLocallyToolStripMenuItem";
-            startLocallyToolStripMenuItem.Size = new Size(224, 26);
+            startLocallyToolStripMenuItem.Size = new Size(213, 26);
             startLocallyToolStripMenuItem.Text = "Start locally";
             startLocallyToolStripMenuItem.Click += StartLocallyToolStripMenuItem_Click;
             // 
             // findOnlineGamesToolStripMenuItem
             // 
             findOnlineGamesToolStripMenuItem.Name = "findOnlineGamesToolStripMenuItem";
-            findOnlineGamesToolStripMenuItem.Size = new Size(224, 26);
+            findOnlineGamesToolStripMenuItem.Size = new Size(213, 26);
             findOnlineGamesToolStripMenuItem.Text = "Find online games";
             findOnlineGamesToolStripMenuItem.Click += FindOnlineGamesToolStripMenuItem_Click;
             // 
             // logInToolStripMenuItem
             // 
             logInToolStripMenuItem.Name = "logInToolStripMenuItem";
-            logInToolStripMenuItem.Size = new Size(224, 26);
+            logInToolStripMenuItem.Size = new Size(213, 26);
             logInToolStripMenuItem.Text = "Log in";
             logInToolStripMenuItem.Click += LogInToolStripMenuItem_Click;
             // 
             // logOffToolStripMenuItem
             // 
             logOffToolStripMenuItem.Name = "logOffToolStripMenuItem";
-            logOffToolStripMenuItem.Size = new Size(224, 26);
+            logOffToolStripMenuItem.Size = new Size(213, 26);
             logOffToolStripMenuItem.Text = "Log off";
             logOffToolStripMenuItem.Click += LogOffToolStripMenuItem_Click;
             // 
@@ -191,6 +191,7 @@
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
+            MaximizeBox = false;
             Name = "OpeningForm";
             Text = "Chess";
             Activated += OpeningForm_Activated;

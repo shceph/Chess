@@ -40,10 +40,9 @@
             // buttonCreateAccount
             // 
             buttonCreateAccount.Font = new Font("Cascadia Mono", 9F);
-            buttonCreateAccount.Location = new Point(86, 243);
-            buttonCreateAccount.Margin = new Padding(3, 2, 3, 2);
+            buttonCreateAccount.Location = new Point(98, 324);
             buttonCreateAccount.Name = "buttonCreateAccount";
-            buttonCreateAccount.Size = new Size(111, 22);
+            buttonCreateAccount.Size = new Size(127, 29);
             buttonCreateAccount.TabIndex = 10;
             buttonCreateAccount.Text = "Create";
             buttonCreateAccount.UseVisualStyleBackColor = true;
@@ -52,12 +51,11 @@
             // textBoxPassword
             // 
             textBoxPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBoxPassword.Location = new Point(10, 110);
-            textBoxPassword.Margin = new Padding(3, 2, 3, 2);
+            textBoxPassword.Location = new Point(11, 147);
             textBoxPassword.MaxLength = 20;
             textBoxPassword.Name = "textBoxPassword";
             textBoxPassword.PasswordChar = '*';
-            textBoxPassword.Size = new Size(260, 21);
+            textBoxPassword.Size = new Size(297, 25);
             textBoxPassword.TabIndex = 9;
             textBoxPassword.UseSystemPasswordChar = true;
             // 
@@ -65,29 +63,28 @@
             // 
             labelPassword.AutoSize = true;
             labelPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelPassword.Location = new Point(10, 82);
+            labelPassword.Location = new Point(11, 109);
             labelPassword.Name = "labelPassword";
-            labelPassword.Size = new Size(154, 16);
+            labelPassword.Size = new Size(198, 20);
             labelPassword.TabIndex = 8;
             labelPassword.Text = "Insert your password:";
             // 
             // textBoxUsername
             // 
             textBoxUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBoxUsername.Location = new Point(10, 34);
-            textBoxUsername.Margin = new Padding(3, 2, 3, 2);
+            textBoxUsername.Location = new Point(11, 45);
             textBoxUsername.MaxLength = 20;
             textBoxUsername.Name = "textBoxUsername";
-            textBoxUsername.Size = new Size(260, 21);
+            textBoxUsername.Size = new Size(297, 25);
             textBoxUsername.TabIndex = 7;
             // 
             // labelUsername
             // 
             labelUsername.AutoSize = true;
             labelUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelUsername.Location = new Point(10, 7);
+            labelUsername.Location = new Point(11, 9);
             labelUsername.Name = "labelUsername";
-            labelUsername.Size = new Size(154, 16);
+            labelUsername.Size = new Size(198, 20);
             labelUsername.TabIndex = 6;
             labelUsername.Text = "Insert your username:";
             // 
@@ -95,29 +92,28 @@
             // 
             labelConfirm.AutoSize = true;
             labelConfirm.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelConfirm.Location = new Point(10, 164);
+            labelConfirm.Location = new Point(11, 219);
             labelConfirm.Name = "labelConfirm";
-            labelConfirm.Size = new Size(154, 16);
+            labelConfirm.Size = new Size(198, 20);
             labelConfirm.TabIndex = 8;
             labelConfirm.Text = "Confirm the password:";
             // 
             // textBoxConfirm
             // 
             textBoxConfirm.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBoxConfirm.Location = new Point(10, 192);
-            textBoxConfirm.Margin = new Padding(3, 2, 3, 2);
+            textBoxConfirm.Location = new Point(11, 256);
             textBoxConfirm.MaxLength = 20;
             textBoxConfirm.Name = "textBoxConfirm";
             textBoxConfirm.PasswordChar = '*';
-            textBoxConfirm.Size = new Size(260, 21);
+            textBoxConfirm.Size = new Size(297, 25);
             textBoxConfirm.TabIndex = 9;
             textBoxConfirm.UseSystemPasswordChar = true;
             // 
             // CreateAccountForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(284, 276);
+            ClientSize = new Size(325, 368);
             Controls.Add(buttonCreateAccount);
             Controls.Add(textBoxConfirm);
             Controls.Add(labelConfirm);
@@ -126,7 +122,7 @@
             Controls.Add(textBoxUsername);
             Controls.Add(labelUsername);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(3, 2, 3, 2);
+            MaximizeBox = false;
             Name = "CreateAccountForm";
             Text = "Create account";
             ResumeLayout(false);

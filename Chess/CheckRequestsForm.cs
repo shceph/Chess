@@ -125,7 +125,7 @@ namespace Chess
             AcceptSelectedRequest();
         }
 
-        private void RefreshToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RefreshListBox();
         }
