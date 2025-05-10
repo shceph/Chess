@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
@@ -186,17 +186,33 @@ namespace Chess
 
         private static readonly Piece[,] board;
         public static Piece[,] Board { get { return board; } }
-
-        private static View view = View.WhitePOV;
-        public static View View { get { return view; } set { view = value; } }
+        public static View View { get; set; } = View.WhitePOV;
 
         private static BoardIndex selectedPiece = new();
         public static BoardIndex SelectedPiece { get { return selectedPiece; } }
         public static bool BoardChanged { get; set; } = false;
-
-        //private static PieceColor whoseTurn = PieceColor.White;
         public static PieceColor WhoseTurn { get; set; } = PieceColor.White;
         public static Guid? OnlineGameID { get; set; } = null;
+
+        private static bool whiteKingMoved = false;
+        public static bool WhiteKingMoved { get { return whiteKingMoved; } }
+
+        private static bool blackKingMoved = false;
+        public static bool BlackKingMoved { get { return blackKingMoved; } }
+
+
+        private static bool whiteRookA1Moved = false;
+        public static bool WhiteRookA1Moved { get { return whiteRookA1Moved; } }
+
+        private static bool whiteRookH1Moved = false;
+        public static bool WhiteRookH1Moved { get { return whiteRookH1Moved; } }
+
+
+        private static bool blackRookA8Moved = false;
+        public static bool BlackRookA8Moved { get { return blackRookA8Moved; } }
+
+        private static bool blackRookH8Moved = false;
+        public static bool BlackRookH8Moved { get { return blackRookH8Moved; } }
 
         static Game()
         {
@@ -389,14 +405,7 @@ namespace Chess
                     Piece chosenSquareOldVal = board[row, col];
                     Piece selectedPieceSquareOldVal = board[selectedRow, selectedCol];
 
-                    if (board[row, col] == Piece.None)
-                    {
-                        (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], board[row, col]);
-                    }
-                    else
-                    {
-                        (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], Piece.None);
-                    }
+                    (board[row, col], board[selectedRow, selectedCol]) = (board[selectedRow, selectedCol], Piece.None);
 
                     if (IsInCheck(board[row, col].GetColor(), board))
                     {
@@ -433,6 +442,44 @@ namespace Chess
                     BoardChanged = true;
                     SwapTurn();
                     selectedPiece.Unselect();
+
+                    if (board[row, col] == Piece.WhiteKing)
+                    {
+                        whiteKingMoved = true;
+                    }
+                    else if (board[row, col] == Piece.BlackKing)
+                    {
+                        blackKingMoved = true;
+                    }
+
+                    if (selectedPieceSquareOldVal == Piece.WhiteRook)
+                    {
+                        ChessPos chessPos = ArrayIndicesToChessPos(selectedRow, selectedCol);
+
+                        if (chessPos.Col == 'A' && chessPos.Row == '1')
+                        {
+                            whiteRookA1Moved = true;
+                        }
+                        else if (chessPos.Col == 'H' && chessPos.Row == '1')
+                        {
+                            whiteRookH1Moved = true;
+                        }
+                    }
+
+                    if (selectedPieceSquareOldVal == Piece.BlackRook)
+                    {
+                        ChessPos chessPos = ArrayIndicesToChessPos(selectedRow, selectedCol);
+
+                        if (chessPos.Col == 'A' && chessPos.Row == '8')
+                        {
+                            blackRookA8Moved = true;
+                        }
+                        else if (chessPos.Col == 'H' && chessPos.Row == '8')
+                        {
+                            blackRookH8Moved = true;
+                        }
+                    }
+
                     return true;
                 }
                 else  // if (availableMoves.Contains(squareToMoveTo))
@@ -476,6 +523,25 @@ namespace Chess
             return true;
         }
 
+        private static char ArrayIndexToColumnMark(int col)
+        {
+            if (col < 0 || col > 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(col));
+            }
+
+            return (char)('A' + col);
+        }
+
+        private static int ArrayIndexToRowNum(int row)
+        {
+            if (row < 0 || row > 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(row));
+            }
+
+            return row + 1;
+        }
         private static int ColumnMarkToArrayIndex(char col)
         {
             if (col < 'A' || col > 'H')
@@ -494,6 +560,17 @@ namespace Chess
             }
 
             return row - 1;
+        }
+
+        struct ChessPos { public ChessPos() { }  public char Row = '1'; public char Col = 'A'; }
+        private static ChessPos ArrayIndicesToChessPos(int row, int col)
+        {
+            ChessPos chessPos = new()
+            {
+                Row = (char)('0' + (char)ArrayIndexToRowNum(row)),
+                Col = ArrayIndexToColumnMark(col)
+            };
+            return chessPos;
         }
 
         public static bool IsInCheck(PieceColor kingsColor, Piece[,] boardToUse)
@@ -543,7 +620,7 @@ namespace Chess
 
         /// <summary>
         /// Check if you can move without leaving your king in check.
-        /// In other words, check if it's remi or checkmate
+        /// In other words, check if it's stalemate or checkmate
         /// </summary>
         /// <param name="side">Tells for which side to do the checking</param>
         /// <returns></returns>
@@ -617,7 +694,8 @@ namespace Chess
                     return true;
                 }
 
-                // If you get to the opponent piece, you can take it but can't go any further, so false is returned to indicate that
+                // If you get to the opponent piece, you can take it but can't go any further,
+                // so false is returned to indicate that
                 if (boardToUse[piece.Row, piece.Col].GetColor() == PieceColor.White ?
                     boardToUse[row, col].IsBlack() : boardToUse[row, col].IsWhite())
                 {
@@ -628,7 +706,9 @@ namespace Chess
                 return false;
             }
 
-            switch (boardToUse[piece.Row, piece.Col])
+            var selectedPiece = boardToUse[piece.Row, piece.Col];
+
+            switch (selectedPiece)
             {
                 case Piece.WhitePawn:
                     if (piece.Row != RowNumToArrayIndex(8) && boardToUse[piece.Row + 1, piece.Col] == Piece.None)

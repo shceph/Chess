@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
@@ -35,14 +35,14 @@ namespace Chess
                 return;
             }
 
-            using OnlineGamesForm ogf = new();
-            ogf.ShowDialog();
+            using OnlineGamesForm onlineGamesForm = new();
+            onlineGamesForm.ShowDialog();
         }
 
         private void CreateAccount()
         {
-            using CreateAccountForm caf = new();
-            caf.ShowDialog();
+            using CreateAccountForm createAccountForm = new();
+            createAccountForm.ShowDialog();
         }
 
         private void LogOff()

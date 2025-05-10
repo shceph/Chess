@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
@@ -33,10 +33,8 @@ namespace Chess
 
             dataGridViewGames.DataSource = dataTable;
             dataGridViewGames.Columns[columnID].Visible = false;
-            dataGridViewGames.Columns[columnID].Width = 297;
-            dataGridViewGames.Columns[columnUsername].Width = 150;
-            dataGridViewGames.Columns[columnDescription].Width =
-                dataGridViewGames.Width - dataGridViewGames.Columns[columnID].Width - dataGridViewGames.Columns[columnUsername].Width - 3;
+            dataGridViewGames.Columns[columnUsername].Width = 300;
+            dataGridViewGames.Columns[columnDescription].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             UpdateGamesTable();
             HostGameForm.IsHosted();
@@ -96,13 +94,15 @@ namespace Chess
             }
 
             labelGameCount.Text = "Game count: " + row_count;
+            dataGridViewGames.Columns[columnID].Visible = false;
         }
 
         private void SendRequest()
         {
             if (HostGameForm.GameID != null)
             {
-                MessageBox.Show("You can't join other games while you are hosting one.", "Can't join", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("You can't join other games while you are hosting one.", "Can't join",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -164,8 +164,8 @@ namespace Chess
                 return;
             }
 
-            using CheckRequestsForm crf = new();
-            crf.ShowDialog();
+            using CheckRequestsForm checkRequestsForm = new();
+            checkRequestsForm.ShowDialog();
         }
 
         private void CheckAcceptedRequests()
@@ -178,12 +178,12 @@ namespace Chess
         {
             if (HostGameForm.GameID != null)
             {
-                MessageBox.Show("You have already hosted the game", "Can't host");
+                MessageBox.Show("You have already hosted a game", "Can't host");
                 return;
             }
 
-            using HostGameForm hgf = new();
-            hgf.ShowDialog();
+            using HostGameForm hostGameForm = new();
+            hostGameForm.ShowDialog();
             UpdateGamesTable();
         }
 

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
@@ -110,7 +110,7 @@ namespace Chess
             MessageBox.Show("The request has been accepted successfully", "Request accepted");
 
             Hide();
-            using MainForm mainForm = new(true, PieceColor.White, HostGameForm.GameID);
+            using MainForm mainForm = new(true, HostGameForm.HostsSide, HostGameForm.GameID);
             mainForm.ShowDialog();
             Show();
         }

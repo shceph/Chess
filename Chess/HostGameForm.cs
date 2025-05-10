@@ -7,14 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using System.Diagnostics;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
     public partial class HostGameForm : Form
     {
         private static Guid? gameId = null;
-        public static Guid? GameID { get { return gameId; } } 
+        public static Guid? GameID { get { return gameId; } }
+
+        private static PieceColor hostsSide = PieceColor.White;
+        public static PieceColor HostsSide { get { return hostsSide; } }
 
         public HostGameForm()
         {
@@ -43,14 +47,19 @@ namespace Chess
 
                 // Perform database operations here
                 string query = @"
-                    SELECT Games.id FROM Games
+                    SELECT Games.id, Games.hosts_side FROM Games
                     JOIN Accounts ON host_id = Accounts.id
                     WHERE Accounts.id = @id";
 
                 using SqlCommand command = new(query, connection);
                 command.Parameters.AddWithValue("@id", Globals.Account.Value.ID);
+                SqlDataReader reader = command.ExecuteReader();
 
-                gameId = (Guid?)command.ExecuteScalar();
+                if (reader.Read())
+                {
+                    gameId = reader.GetGuid(0);
+                    hostsSide = reader.GetBoolean(1) ? PieceColor.White : PieceColor.Black;
+                }
 
                 connection.Close();
             }
@@ -84,12 +93,11 @@ namespace Chess
 
                 // Perform database operations here
                 string query = @"
-                    INSERT INTO Games (id, host_id, guest_id, game_description, is_whites_turn, board)
+                    INSERT INTO Games (id, host_id, game_description, is_whites_turn, board, hosts_side)
                     OUTPUT INSERTED.id
-                    VALUES (NEWID(), @host_id, NULL, @description, 1, @board_string)";
+                    VALUES (NEWID(), @host_id, @description, 1, @board_string, @hosts_side)";
 
                 using SqlCommand command = new(query, connection);
-
                 string? description = null;
 
                 if (textBoxDescription.Text != string.Empty)
@@ -100,6 +108,7 @@ namespace Chess
                 command.Parameters.AddWithValue("@host_id", Globals.Account.Value.ID);
                 command.Parameters.AddWithValue("@description", (object?)description ?? DBNull.Value);
                 command.Parameters.AddWithValue("@board_string", Game.InitialBoardString);
+                command.Parameters.AddWithValue("@hosts_side", radioButtonWhite.Checked);
 
                 gameId = (Guid)command.ExecuteScalar();
 

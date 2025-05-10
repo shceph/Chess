@@ -8,12 +8,11 @@ CREATE TABLE Games (
 	id UNIQUEIDENTIFIER PRIMARY KEY,
 	game_description VARCHAR(255),
 	is_whites_turn BIT NOT NULL,
+	hosts_side BIT NOT NULL DEFAULT 1,
 	board VARCHAR(64) NOT NULL,
 
 	host_id UNIQUEIDENTIFIER NOT NULL,
-	guest_id UNIQUEIDENTIFIER DEFAULT NULL,
-	FOREIGN KEY (host_id) REFERENCES Accounts(id),
-	FOREIGN KEY (guest_id) REFERENCES Accounts(id)
+	FOREIGN KEY (host_id) REFERENCES Accounts(id)
 )
 
 CREATE TABLE JoinRequests (

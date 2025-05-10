@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace Chess
     public partial class AcceptedRequestsForm : Form
     {
         private readonly List<Guid> ids = [];
+        private readonly List<bool> hostsSide = [];
 
         public AcceptedRequestsForm()
         {
@@ -39,7 +40,7 @@ namespace Chess
                 connection.Open();
 
                 string query = @"
-                    SELECT Games.id, username
+                    SELECT Games.id, Games.hosts_side, username
                     FROM JoinRequests
                     JOIN Games ON (Games.id = JoinRequests.game_id)
                     JOIN Accounts ON (Accounts.id = Games.host_id)
@@ -55,7 +56,8 @@ namespace Chess
                     while (reader.Read())
                     {
                         ids.Add(reader.GetGuid(0));
-                        listBoxAcceptedRequests.Items.Add(reader.GetString(1));
+                        hostsSide.Add(reader.GetBoolean(1));
+                        listBoxAcceptedRequests.Items.Add(reader.GetString(2));
                     }
                 }
                 else
@@ -80,8 +82,8 @@ namespace Chess
                 return;
             }
 
-            Hide();
-            using MainForm mainForm = new(true, PieceColor.Black, ids[selectedIndex]);
+            Hide(); // If hostsSide[selectedIndex] is true, it means host's side is white, which means the side of the joining player is black
+            using MainForm mainForm = new(true, hostsSide[selectedIndex] ? PieceColor.Black : PieceColor.White, ids[selectedIndex]);
             mainForm.ShowDialog();
             Show();
         }

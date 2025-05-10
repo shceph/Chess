@@ -1,6 +1,6 @@
 using Microsoft.VisualBasic.Devices;
-using System.Data.SqlClient;
 using System.Drawing.Imaging;
+using Microsoft.Data.SqlClient;
 
 namespace Chess
 {
@@ -36,6 +36,7 @@ namespace Chess
 
             if (isOnline)
             {
+                Game.View = playersSide == PieceColor.White ? View.WhitePOV : View.BlackPOV;
                 Game.OnlineGameID = onlineGameID;
                 CheckIfPlayersTurn(true);
             }

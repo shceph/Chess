@@ -66,7 +66,7 @@
             // acceptToolStripMenuItem
             // 
             acceptToolStripMenuItem.Name = "acceptToolStripMenuItem";
-            acceptToolStripMenuItem.Size = new Size(224, 26);
+            acceptToolStripMenuItem.Size = new Size(138, 26);
             acceptToolStripMenuItem.Text = "Accept";
             acceptToolStripMenuItem.Click += AcceptToolStripMenuItem_Click;
             // 
@@ -97,7 +97,7 @@
             Controls.Add(menuStrip);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MainMenuStrip = menuStrip;
-            MinimizeBox = false;
+            MaximizeBox = false;
             Name = "CheckRequestsForm";
             Text = "Join requests";
             menuStrip.ResumeLayout(false);

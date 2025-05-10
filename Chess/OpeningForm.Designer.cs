@@ -47,7 +47,7 @@
             // 
             // buttonStart
             // 
-            buttonStart.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonStart.Font = new Font("Segoe UI", 9F);
             buttonStart.Location = new Point(11, 48);
             buttonStart.Name = "buttonStart";
             buttonStart.Size = new Size(497, 69);
@@ -58,7 +58,7 @@
             // 
             // buttonStartOnline
             // 
-            buttonStartOnline.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonStartOnline.Font = new Font("Segoe UI", 9F);
             buttonStartOnline.Location = new Point(11, 123);
             buttonStartOnline.Name = "buttonStartOnline";
             buttonStartOnline.Size = new Size(497, 69);
@@ -70,45 +70,45 @@
             // labelUsername
             // 
             labelUsername.AutoSize = true;
-            labelUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelUsername.Font = new Font("Segoe UI", 9F);
             labelUsername.Location = new Point(11, 236);
             labelUsername.Name = "labelUsername";
-            labelUsername.Size = new Size(198, 20);
+            labelUsername.Size = new Size(149, 20);
             labelUsername.TabIndex = 1;
             labelUsername.Text = "Insert your username:";
             // 
             // textBoxUsername
             // 
-            textBoxUsername.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxUsername.Font = new Font("Segoe UI", 9F);
             textBoxUsername.Location = new Point(11, 273);
             textBoxUsername.MaxLength = 20;
             textBoxUsername.Name = "textBoxUsername";
-            textBoxUsername.Size = new Size(237, 25);
+            textBoxUsername.Size = new Size(237, 27);
             textBoxUsername.TabIndex = 2;
             // 
             // textBoxPassword
             // 
-            textBoxPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxPassword.Font = new Font("Segoe UI", 9F);
             textBoxPassword.Location = new Point(272, 273);
             textBoxPassword.MaxLength = 20;
             textBoxPassword.Name = "textBoxPassword";
-            textBoxPassword.Size = new Size(237, 25);
+            textBoxPassword.Size = new Size(237, 27);
             textBoxPassword.TabIndex = 4;
             textBoxPassword.UseSystemPasswordChar = true;
             // 
             // labelPassword
             // 
             labelPassword.AutoSize = true;
-            labelPassword.Font = new Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelPassword.Font = new Font("Segoe UI", 9F);
             labelPassword.Location = new Point(272, 236);
             labelPassword.Name = "labelPassword";
-            labelPassword.Size = new Size(198, 20);
+            labelPassword.Size = new Size(148, 20);
             labelPassword.TabIndex = 3;
             labelPassword.Text = "Insert your password:";
             // 
             // buttonLogIn
             // 
-            buttonLogIn.Font = new Font("Cascadia Mono", 9F);
+            buttonLogIn.Font = new Font("Segoe UI", 9F);
             buttonLogIn.Location = new Point(199, 335);
             buttonLogIn.Name = "buttonLogIn";
             buttonLogIn.Size = new Size(127, 37);
